@@ -1,4 +1,4 @@
-package com.liberalisle.gpms;
+package com.gpms;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

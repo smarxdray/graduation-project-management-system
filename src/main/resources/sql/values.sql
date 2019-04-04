@@ -12,8 +12,6 @@ TRUNCATE `role`;
 TRUNCATE `teacher_title`;
 TRUNCATE `major`;
 TRUNCATE `college`;
-TRUNCATE `route_blacklist`;
-TRUNCATE `route`;
 SET FOREIGN_KEY_CHECKS =1;
 
 INSERT INTO `college`
