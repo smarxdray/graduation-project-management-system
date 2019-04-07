@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace该是StudentMapper的完整限定名-->
+<mapper namespace="com.gpms.dao.mapper.TeacherMapper">
+    <!--定义java bean的属性与数据库表的列之间的映射。type="Teacher"用到了application.properties中定义的别名-->
+    <resultMap id="teacherResultMap" type="Teacher">
+        <!--id映射-->
+<!--        <id property="id" column="id"/>-->
+        <!--普通属性映射-->
+<!--        <association property="basic" javaType="com.gpms.dao.domain.entity.User">-->
+<!--            <result property="id" column="T.id"/>-->
+<!--        </association>-->
+<!--        <result property="role" column="gender"/>-->
+<!--        <result property="college" column="college"/>-->
+<!--        <result property="teacher" column="grade"/>-->
+    </resultMap>
+    <!--与TeacherMapper接口中的selectStudentsByTeacherId方法对应，包括
+    方法名和参数类型。SQL语句中以“#{}”的形式引用参数-->
+    <select id="selectTeacherList" resultType="Teacher">
+        select t.*,
+               tt.name title,
+               c.name college,
+               m.name major,
+               teacher.student_number studentNumber,
+               teacher.student_mark studentMark,
+               teacher.accept_disabled acceptDisabled,
+               teacher.create_time createTimeTeacher,
+               teacher.update_time updateTimeTeacher
+        from (select * from user where user.role = 4) as t
+        left join teacher on t.id = teacher.owner
+        left join teacher_title tt on teacher.title = tt.id
+        left join college c on teacher.college = c.id
+        left join major m on teacher.major = m.id;
+    </select>
+</mapper>

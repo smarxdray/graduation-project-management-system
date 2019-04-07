@@ -1,9 +1,9 @@
 package com.gpms.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.gpms.dao.domain.entity.User;
+import com.gpms.dao.domain.entity.Role;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface UserMapper extends BaseMapper<User> {
+public interface RoleMapper extends BaseMapper<Role> {
 }

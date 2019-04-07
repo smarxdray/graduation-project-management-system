@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace该是StudentMapper的完整限定名-->
+<mapper namespace="com.gpms.dao.mapper.StudentMapper">
+
+    <select id="selectStudentsNotAllotted" resultType="Student">
+        select s.*,
+               student.status statusStudent,
+               student.project_title projectTitle,
+               student.file_uri fileUri,
+               student.review_times,
+               c.id college,
+               m.id major,
+               student.gpa,
+               address,
+               allotted_disabled,
+               s.comment_disabled,
+               student.update_time updateTimeStudent,
+               student.create_time createTimeStudent
+        from (select * from user where user.role = 5) as s
+        left join student on student.owner = s.id
+        left join user on student.teacher = user.id
+        left join college c on student.college = c.id
+        left join major m on student.major = m.id
+        where student.teacher is null;
+    </select>
+
+    <select id="selectStudentListByTeacherId" resultType="Student">
+        select  s.id
+        from (select * from user where user.role = 5) as s
+        left join student on student.owner = s.id
+        where student.teacher = #{id};
+    </select>
+</mapper>
