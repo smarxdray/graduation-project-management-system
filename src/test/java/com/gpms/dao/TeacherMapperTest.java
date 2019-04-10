@@ -1,7 +1,10 @@
 package com.gpms.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.gpms.BaseTest;
+import com.gpms.dao.domain.Teacher;
 import com.gpms.dao.domain.entity.User;
+import com.gpms.dao.mapper.TeacherMapper;
 import com.gpms.dao.mapper.UserMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,21 +14,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class UserTest {
-
+public class TeacherMapperTest extends BaseTest {
     @Autowired
-    private UserMapper userMapper;
+    private com.gpms.dao.mapper.TeacherMapper teacherMapper;
 
     @Test
     public void testSelect() {
         System.out.println(("----- selectAll method test ------"));
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id",  1);
-        List<User> userList = userMapper.selectList(queryWrapper);
+        List<Teacher> teacherList = teacherMapper.selectTeacherList();
 //        Assert.assertEquals(1, userList.size());
-        for (User user : userList) System.out.println(user);
+        for (Teacher teacher : teacherList) System.out.println(teacher);
     }
-
 }
