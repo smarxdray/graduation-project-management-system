@@ -1,9 +1,8 @@
 package com.gpms.dao;
 
 import com.gpms.BaseTest;
-import com.gpms.dao.domain.Student;
 import com.gpms.dao.domain.entity.User;
-import com.gpms.service.impl.RedisHelperImpl;
+import com.gpms.service.impl.RedisServiceImpl;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ public class RedisTest extends BaseTest {
     private RedisTemplate redisTemplate;
 
     @Autowired
-    private RedisHelperImpl redisHelper;
+    private RedisServiceImpl redisHelper;
 
     @Ignore
     public void test() throws Exception{

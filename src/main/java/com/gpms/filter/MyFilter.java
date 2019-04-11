@@ -1,9 +1,14 @@
 package com.gpms.filter;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Component
 public class MyFilter implements Filter {
 
     @Override
@@ -22,11 +27,10 @@ public class MyFilter implements Filter {
 
             throws IOException, ServletException {
 
-        // TODO Auto-generated method stub
-
-        HttpServletRequest request = (HttpServletRequest) srequest;
-
-        System.out.println("this is MyFilter,url :"+request.getRequestURI());
+//        HttpServletResponse response = (HttpServletResponse) sresponse;
+//        response.setHeader("Access-Control-Allow-Origin", "*");
+//        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
+//        response.setHeader("Access-Control-Allow-Credentials", "true");
 
         filterChain.doFilter(srequest, sresponse);
 

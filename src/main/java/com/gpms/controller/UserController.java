@@ -2,9 +2,11 @@ package com.gpms.controller;
 
 import com.gpms.dao.domain.entity.User;
 import com.gpms.service.UserService;
-import com.gpms.utils.VALUE;
+import com.gpms.utils.Constant;
 import com.gpms.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,18 +17,24 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+//    @MessageMapping("/hello")
+//    @SendTo("/topic/greeting")
+//    public String greeting(User greeting) {
+//        return greeting.toString();
+//    }
+
     @GetMapping(value = "")
     public Response getUsers(
-            @RequestParam(VALUE.PARAM_TYPE) String type) {
+            @RequestParam(Constant.PARAM_TYPE) String type) {
         List<User> userList = null;
         switch (type) {
-            case VALUE.ALL:
+            case Constant.ALL:
                 userList = userService.getUsers();
                 break;
-            case VALUE.TEACHER:
+            case Constant.TEACHER:
                 userList = userService.getTeachers();
                 break;
-            case VALUE.STUDENT:
+            case Constant.STUDENT:
                 userList = userService.getStudents();
                 break;
             default: break;

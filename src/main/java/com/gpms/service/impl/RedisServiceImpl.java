@@ -1,6 +1,6 @@
 package com.gpms.service.impl;
 
-import com.gpms.service.RedisHelper;
+import com.gpms.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service("RedisHelper")
-public class RedisHelperImpl<HK, T> implements RedisHelper<HK, T> {
+public class RedisServiceImpl<HK, T> implements RedisService<HK, T> {
     // 在构造器中获取redisTemplate实例, key(not hashKey) 默认使用String类型
     private RedisTemplate<String, T> redisTemplate;
     // 在构造器中通过redisTemplate的工厂方法实例化操作对象
@@ -22,7 +22,7 @@ public class RedisHelperImpl<HK, T> implements RedisHelper<HK, T> {
 
     // IDEA虽然报错,但是依然可以注入成功, 实例化操作对象后就可以直接调用方法操作Redis数据库
     @Autowired
-    public RedisHelperImpl(RedisTemplate<String, T> redisTemplate) {
+    public RedisServiceImpl(RedisTemplate<String, T> redisTemplate) {
         this.redisTemplate = redisTemplate;
         this.hashOperations = redisTemplate.opsForHash();
         this.listOperations = redisTemplate.opsForList();

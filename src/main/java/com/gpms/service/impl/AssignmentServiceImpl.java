@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class AssignmentImpl implements AssignmentService {
+public class AssignmentServiceImpl implements AssignmentService {
     @Autowired
     StudentService studentService;
     @Autowired
