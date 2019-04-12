@@ -1,96 +1,240 @@
 package com.gpms.service.impl;
 
 import com.gpms.service.RedisService;
+import com.gpms.utils.ExpireEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-@Service("RedisHelper")
-public class RedisServiceImpl<HK, T> implements RedisService<HK, T> {
-    // 在构造器中获取redisTemplate实例, key(not hashKey) 默认使用String类型
-    private RedisTemplate<String, T> redisTemplate;
-    // 在构造器中通过redisTemplate的工厂方法实例化操作对象
-    private HashOperations<String, HK, T> hashOperations;
-    private ListOperations<String, T> listOperations;
-    private ZSetOperations<String, T> zSetOperations;
-    private SetOperations<String, T> setOperations;
-    private ValueOperations<String, T> valueOperations;
+@Service
+public class RedisServiceImpl implements RedisService {
+    public final static Logger logger = LoggerFactory.getLogger(RedisServiceImpl.class);
 
-    // IDEA虽然报错,但是依然可以注入成功, 实例化操作对象后就可以直接调用方法操作Redis数据库
     @Autowired
-    public RedisServiceImpl(RedisTemplate<String, T> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-        this.hashOperations = redisTemplate.opsForHash();
-        this.listOperations = redisTemplate.opsForList();
-        this.zSetOperations = redisTemplate.opsForZSet();
-        this.setOperations = redisTemplate.opsForSet();
-        this.valueOperations = redisTemplate.opsForValue();
-    }
-
+    private RedisTemplate redisTemplate;
+    /**
+     * 写入缓存
+     * @param key
+     * @param value
+     * @return Boolean
+     */
     @Override
-    public void hashPut(String key, HK hashKey, T domain) {
-        hashOperations.put(key, hashKey, domain);
-    }
-
-    @Override
-    public Map<HK, T> hashFindAll(String key) {
-        return hashOperations.entries(key);
-    }
-
-    @Override
-    public T hashGet(String key, HK hashKey) {
-        return hashOperations.get(key, hashKey);
-    }
-
-    @Override
-    public void hashRemove(String key, HK hashKey) {
-        hashOperations.delete(key, hashKey);
-    }
-
-    @Override
-    public Long listPush(String key, T domain) {
-        return listOperations.rightPush(key, domain);
-    }
-
-    @Override
-    public Long listUnshift(String key, T domain) {
-        return listOperations.leftPush(key, domain);
-    }
-
-    @Override
-    public List<T> listFindAll(String key) {
-        if (!redisTemplate.hasKey(key)) {
-            return null;
+    public boolean set(final String key , Object value){
+        boolean result = false;
+        try {
+            ValueOperations<Serializable, Object> valueOperations = redisTemplate.opsForValue();
+            valueOperations.set(key , value);
+            result = true;
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        return listOperations.range(key, 0, listOperations.size(key));
+        return result;
+    }
+
+    /**
+     * 写入缓存设置时效时间
+     * @param key
+     * @param value
+     * @param expireTime
+     * @return
+     */
+    @Override
+    public boolean set(final String key , Object value , Long expireTime){
+        boolean result = false;
+        try {
+            ValueOperations<Serializable , Object> valueOperations = redisTemplate.opsForValue();
+            valueOperations.set(key , value);
+            redisTemplate.expire(key , expireTime , TimeUnit.MILLISECONDS);
+            result = true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 批量删除对应的value
+     * @param keys
+     */
+    @Override
+    public void remove(final String... keys) {
+        for (String key : keys) {
+            remove(key);
+        }
+    }
+
+    /**
+     * 批量删除key
+     * @param pattern
+     */
+    @Override
+    public void removePattern(final String pattern) {
+        Set<Serializable> keys = redisTemplate.keys(pattern);
+        if (keys.size() > 0)
+            redisTemplate.delete(keys);
+    }
+    /**
+     * 删除对应的value
+     * @param key
+     */
+    @Override
+    public void remove(final String key) {
+        if (exists(key)) {
+            redisTemplate.delete(key);
+        }
+    }
+    /**
+     * 判断缓存中是否有对应的value
+     * @param key
+     * @return
+     */
+    @Override
+    public boolean exists(final String key) {
+        return redisTemplate.hasKey(key);
+    }
+    /**
+     * 读取缓存
+     * @param key
+     * @return
+     */
+    @Override
+    public Object get(final String key) {
+        Object result = null;
+        ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
+        result = operations.get(key);
+        return result;
+    }
+    /**
+     * 哈希 添加
+     * @param key
+     * @param hashKey
+     * @param value
+     */
+    @Override
+    public void hmSet(String key, Object hashKey, Object value){
+        HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
+        hash.put(key,hashKey,value);
+    }
+
+    /**
+     * 哈希获取数据
+     * @param key
+     * @param hashKey
+     * @return
+     */
+    @Override
+    public Object hmGet(String key, Object hashKey){
+        HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
+        return hash.get(key,hashKey);
+    }
+
+    /**
+     * 列表添加
+     * @param k
+     * @param v
+     */
+    @Override
+    public void lPush(String k,Object v){
+        ListOperations<String, Object> list = redisTemplate.opsForList();
+        list.rightPush(k,v);
+    }
+
+    /**
+     * 列表获取
+     * @param k
+     * @param l
+     * @param l1
+     * @return
+     */
+    @Override
+    public List<Object> lRange(String k, long l, long l1){
+        ListOperations<String, Object> list = redisTemplate.opsForList();
+        return list.range(k,l,l1);
+    }
+
+    /**
+     * 集合添加
+     * @param key
+     * @param value
+     */
+    @Override
+    public void add(String key,Object value){
+        SetOperations<String, Object> set = redisTemplate.opsForSet();
+        set.add(key,value);
+    }
+
+    /**
+     * 集合获取
+     * @param key
+     * @return
+     */
+    @Override
+    public Set<Object> setMembers(String key){
+        SetOperations<String, Object> set = redisTemplate.opsForSet();
+        return set.members(key);
+    }
+
+    /**
+     * 有序集合添加
+     * @param key
+     * @param value
+     * @param scoure
+     */
+    @Override
+    public void zAdd(String key,Object value,double scoure){
+        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
+        zset.add(key,value,scoure);
+    }
+
+    /**
+     * 有序集合获取
+     * @param key
+     * @param scoure
+     * @param scoure1
+     * @return
+     */
+    @Override
+    public Set<Object> rangeByScore(String key, double scoure, double scoure1){
+        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
+        return zset.rangeByScore(key, scoure, scoure1);
+    }
+    @Override
+    public boolean delete(String key) {
+        return redisTemplate.delete(key);
     }
 
     @Override
-    public T listLPop(String key) {
-        return listOperations.leftPop(key);
+    public void addToListLeft(String listKey, ExpireEnum expireEnum, Object... values) {
+        //绑定操作
+        BoundListOperations<String, Object> boundValueOperations = redisTemplate.boundListOps(listKey);
+        //插入数据
+        boundValueOperations.leftPushAll(values);
+        //设置过期时间
+        boundValueOperations.expire(expireEnum.getTime(),expireEnum.getTimeUnit());
     }
 
     @Override
-    public void valuePut(String key, T domain) {
-        valueOperations.set(key, domain);
+    public void addToListRight(String listKey, ExpireEnum expireEnum, Object... values) {
+        //绑定操作
+        BoundListOperations<String, Object> boundValueOperations = redisTemplate.boundListOps(listKey);
+        //插入数据
+        boundValueOperations.rightPushAll(values);
+        //设置过期时间
+        boundValueOperations.expire(expireEnum.getTime(),expireEnum.getTimeUnit());
     }
 
     @Override
-    public T getValue(String key) {
-        return valueOperations.get(key);
-    }
-
-    @Override
-    public void remove(String key) {
-        redisTemplate.delete(key);
-    }
-
-    @Override
-    public boolean expirse(String key, long timeout, TimeUnit timeUnit) {
-        return redisTemplate.expire(key, timeout, timeUnit);
+    public List<Object> rangeList(String listKey, long start, long end) {
+        //绑定操作
+        BoundListOperations<String, Object> boundValueOperations = redisTemplate.boundListOps(listKey);
+        //查询数据
+        return boundValueOperations.range(start, end);
     }
 }

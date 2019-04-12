@@ -1,71 +1,46 @@
 package com.gpms.service;
 
+import com.gpms.utils.ExpireEnum;
+
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.Set;
 
-/**
- * K 指以hash结构操作时 键类型
- * T 为数据实体 应实现序列化接口,并定义serialVersionUID * RedisTemplate 提供了五种数据结构操作类型 hash / list / set / zset / value
- * 方法命名格式为 数据操作类型 + 操作 如 hashPut 指以hash结构(也就是map)想key添加键值对
- */
-public interface RedisService<HK, T> {
-    /**
-     * Hash结构 添加元素 * @param key key * @param hashKey hashKey * @param domain 元素
-     */
-    void hashPut(String key, HK hashKey, T domain);
+public interface RedisService {
+    boolean set(String key, Object value);
 
-    /**
-     * Hash结构 获取指定key所有键值对 * @param key * @return
-     */
-    Map<HK, T> hashFindAll(String key);
+    boolean set(String key, Object value, Long expireTime);
 
-    /**
-     * Hash结构 获取单个元素 * @param key * @param hashKey * @return
-     */
-    T hashGet(String key, HK hashKey);
+    void remove(String... keys);
 
-    void hashRemove(String key, HK hashKey);
-
-    /**
-     * List结构 向尾部(Right)添加元素 * @param key * @param domain * @return
-     */
-    Long listPush(String key, T domain);
-
-    /**
-     * List结构 向头部(Left)添加元素 * @param key * @param domain * @return
-     */
-    Long listUnshift(String key, T domain);
-
-    /**
-     * List结构 获取所有元素 * @param key * @return
-     */
-    List<T> listFindAll(String key);
-
-    /**
-     * List结构 移除并获取数组第一个元素 * @param key * @return
-     */
-    T listLPop(String key);
-
-    /**
-     * 对象的实体类
-     * @param key
-     * @param domain
-     * @return
-     */
-    void valuePut(String key, T domain);
-
-    /**
-     * 获取对象实体类
-     * @param key
-     * @return
-     */
-    T getValue(String key);
+    void removePattern(String pattern);
 
     void remove(String key);
 
-    /**
-     * 设置过期时间 * @param key 键 * @param timeout 时间 * @param timeUnit 时间单位
-     */
-    boolean expirse(String key, long timeout, TimeUnit timeUnit);
+    boolean exists(String key);
+
+    Object get(String key);
+
+    void hmSet(String key, Object hashKey, Object value);
+
+    Object hmGet(String key, Object hashKey);
+
+    void lPush(String k, Object v);
+
+    List<Object> lRange(String k, long l, long l1);
+
+    void add(String key, Object value);
+
+    Set<Object> setMembers(String key);
+
+    void zAdd(String key, Object value, double scoure);
+
+    Set<Object> rangeByScore(String key, double scoure, double scoure1);
+
+    boolean delete(String key);
+
+    void addToListLeft(String listKey, ExpireEnum expireEnum, Object... values);
+
+    void addToListRight(String listKey, ExpireEnum expireEnum, Object... values);
+
+    List<Object> rangeList(String listKey, long start, long end);
 }

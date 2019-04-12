@@ -18,6 +18,8 @@ public class Constant {
     public static final String PARAM_ROLE = "role";
     public static final String PARAM_ALLOTTED = "allotted";
 
+    public static final String FILE_DIR = "S:\\ray\\Desktop\\gpms\\";
+
     //webSocket相关配置
     //链接地址
     public static String WEBSOCKETPATHPERFIX = "/ws-push";

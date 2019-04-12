@@ -216,3 +216,33 @@ CREATE TABLE IF NOT EXISTS `comment`(
 	`create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (`author`) REFERENCES `user`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `project`(
+	 `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	 `teacher` INT UNSIGNED NOT NULL,
+	 `title` VARCHAR(32) NOT NULL,
+	 `content` LONGTEXT NOT NULL,
+	 `status` INT DEFAULT 0
+        COMMENT '0: 待审核
+				 1：审核通过
+                 10：审核通过，未认领
+                 11: 审核通过已认领',
+     `student` INT UNSIGNED,
+	 `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	 `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	 FOREIGN KEY (`teacher`) REFERENCES `user`(`id`),
+	 FOREIGN KEY (`student`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `file`(
+   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+   `owner` INT UNSIGNED NOT NULL,
+   `name` VARCHAR(32),
+   `extension` VARCHAR(8),
+   `path` VARCHAR(128) NOT NULL
+        COMMENT '/dir/name.extension',
+   `size` INT UNSIGNED,
+   `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+   FOREIGN KEY (`owner`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -29,6 +29,11 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
+    public List<Notice> getNoticesByUserId(Integer userId) {
+        return noticeMapper.getNoticesByUserId(userId);
+    }
+
+    @Override
     @Transactional
     public int addNotice(Notice notice, List<PrivateNotice> privateNotices) {
         int lines = noticeMapper.insert(notice);

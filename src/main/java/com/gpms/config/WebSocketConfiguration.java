@@ -32,17 +32,23 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer{
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/stomp-websocket")
+        registry.addEndpoint("/notice-websocket")
 //                .addInterceptors(authHandshakeInterceptor)
 //                .setHandshakeHandler(myHandshakeHandler)
                 .setAllowedOrigins("http://localhost:9527")
                 .withSockJS();
+
+//        registry.addEndpoint("/chat-websocket")
+//                .addInterceptors(authHandshakeInterceptor)
+//                .setHandshakeHandler(myHandshakeHandler)
+//                .setAllowedOrigins("http://localhost:9527")
+//                .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        //客户端需要把消息发送到/message/xxx地址
-        registry.setApplicationDestinationPrefixes("/message");
+        //客户端需要把消息发送到/origin/xxx地址
+        registry.setApplicationDestinationPrefixes("/origin");
         //服务端广播消息的路径前缀，客户端需要相应订阅/broadcast/yyy这个地址的消息
         registry.enableSimpleBroker("/broadcast");
     }

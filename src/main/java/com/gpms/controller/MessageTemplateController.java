@@ -1,7 +1,7 @@
 package com.gpms.controller;
 
 import com.gpms.dao.domain.entity.User;
-import com.gpms.service.impl.RedisHelper;
+import com.gpms.service.impl.RedisServiceImpl;
 import com.gpms.utils.Constant;
 import com.gpms.utils.ExpireEnum;
 import com.gpms.utils.SpringContextUtils;
@@ -14,6 +14,7 @@ import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -41,20 +42,20 @@ public class MessageTemplateController {
     @Autowired
     private SimpUserRegistry userRegistry;
 
-//    @Resource(name = "redisServiceImpl")
     @Autowired
-    private RedisHelper redisService;
+    private RedisServiceImpl redisService;
 
     /**
      * 简单测试SimpMessagingTemplate的用法
      */
-//    @PostMapping("/greeting")
-//    @ResponseBody
-//    public String greeting(@RequestBody Greeting greeting) {
-//        this.messagingTemplate.convertAndSend("/topic/greeting", new HelloMessage("Hello," + greeting.getName() + "!"));
-//
-//        return "ok";
-//    }
+    @PostMapping("/greeting")
+    @ResponseBody
+    public String greeting(@RequestBody User greeting) {
+        greeting.setName("greeting");
+        this.messagingTemplate.convertAndSend("/topic/greeting", greeting);
+
+        return "ok";
+    }
 
     /**
      * 给指定用户发送WebSocket消息
