@@ -7,6 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface FileService {
+    List<FileInfo> getFileInfos();
+    List<FileInfo> getFileInfosByOwner(Integer ownerId);
     FileInfo getFileInfoById(Integer id);
     String write(MultipartFile file, int idx) throws FileException;
     int batch(List<MultipartFile> files, Integer userId)  throws FileException;

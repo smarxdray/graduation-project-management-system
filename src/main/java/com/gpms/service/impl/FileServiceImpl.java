@@ -1,22 +1,26 @@
 package com.gpms.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gpms.dao.domain.entity.FileInfo;
 import com.gpms.dao.mapper.FileMapper;
 import com.gpms.exception.FileException;
 import com.gpms.service.FileService;
 import com.gpms.utils.Constant;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class FileServiceImpl implements FileService {
-    @Autowired
-    FileMapper fileMapper;
+    private final FileMapper fileMapper;
+
+    public FileServiceImpl(FileMapper fileMapper) {
+        this.fileMapper = fileMapper;
+    }
 
     @Override
     @Transactional
@@ -26,7 +30,7 @@ public class FileServiceImpl implements FileService {
             MultipartFile file = files.get(i);
             String fullPath = write(files.get(i), i);
             String filename = file.getOriginalFilename();
-            String suffixName = filename.substring(filename.lastIndexOf(".") + 1);
+            String suffixName = Objects.requireNonNull(filename).substring(filename.lastIndexOf(".") + 1);
             Integer size = Math.toIntExact(file.getSize());
 
             FileInfo fileInfo = new FileInfo();
@@ -63,8 +67,20 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public List<FileInfo> getFileInfos() {
+        return fileMapper.selectList(null);
+    }
+
+    @Override
     public FileInfo getFileInfoById(Integer id) {
         return fileMapper.selectById(id);
+    }
+
+    @Override
+    public List<FileInfo> getFileInfosByOwner(Integer ownerId) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("owner", ownerId);
+        return fileMapper.selectList(wrapper);
     }
 
     public String write(MultipartFile file, int idx) throws FileException {
@@ -91,9 +107,10 @@ public class FileServiceImpl implements FileService {
 //        BufferedOutputStream stream;
 //        if (!file.isEmpty()) {
 //            try {
+//                String filePath = Constant.FILE_DIR;
 //                byte[] bytes = file.getBytes();
 //                stream = new BufferedOutputStream(new FileOutputStream(
-//                        new FileInfo(filePath + file.getOriginalFilename())));//设置文件路径及名字
+//                        new File(filePath + file.getOriginalFilename())));//设置文件路径及名字
 //                stream.write(bytes);// 写入
 //                stream.close();
 //            } catch (Exception e) {

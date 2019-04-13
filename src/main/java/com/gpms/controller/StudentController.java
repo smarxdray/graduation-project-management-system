@@ -1,6 +1,7 @@
 package com.gpms.controller;
 
 import com.gpms.dao.domain.Student;
+import com.gpms.dao.domain.entity.StudentDetail;
 import com.gpms.service.StudentService;
 import com.gpms.utils.Response;
 import com.gpms.utils.Constant;
@@ -19,15 +20,23 @@ public class StudentController {
     StudentService studentService;
 
     @GetMapping("")
-    public Response getStudents(@RequestParam(Constant.PARAM_ALLOTTED) Integer allotted) {
+    public Response getStudents(@RequestParam(name = Constant.PARAM_ALLOTTED, required = false) Boolean allotted,
+                                @RequestParam(name = "teacher", required = false) Integer teacherId) {
         List<Student> studentList = null;
-        switch(allotted) {
-            case 0:
-                studentList = studentService.getStudentNotAllotted();
-                break;
-                default: break;
+        if (allotted != null) {
+                studentList = studentService.getStudentsAllottedOrNot(allotted);
+        } else if (teacherId != null) {
+            studentList = studentService.getStudentsByTeacher(teacherId);
         }
-        if (studentList == null) return Response.errorMsg("获取列表失败！");
-        else return Response.ok(studentList);
+        return studentList == null ? Response.errorMsg("获取列表失败！")
+                : Response.ok(studentList);
+    }
+
+    @GetMapping("/details")
+    public Response getStudentDetails(@RequestParam("teacher") Integer teacherId) {
+        List<StudentDetail> studentDetails = null;
+        studentDetails = studentService.getStudentDetailsByTeacher(teacherId);
+        return studentDetails == null ? Response.errorMsg("获取学生详细信息失败！")
+                : Response.ok(studentDetails);
     }
 }

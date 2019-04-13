@@ -6,15 +6,11 @@ import com.gpms.service.FileService;
 import com.gpms.utils.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -23,19 +19,40 @@ import java.net.URLEncoder;
 import java.util.List;
 
 @Controller
+@RequestMapping("/files")
 public class FileController {
     private static final Logger log = LoggerFactory.getLogger(FileController.class);
 
-    @Autowired
-    FileService fileService;
+    private final FileService fileService;
 
-    @PostMapping("/upload")
+    public FileController(FileService fileService) {
+        this.fileService = fileService;
+    }
+
     @ResponseBody
+    @GetMapping("")
+    public Response getFiles(@RequestParam("owner") Integer ownerId) {
+        List<FileInfo> fileInfos = fileService.getFileInfosByOwner(ownerId);
+        return fileInfos == null ? Response.errorMsg("获取文件列表失败！")
+                : Response.ok(fileInfos);
+    }
+
+    @ResponseBody
+    @GetMapping("/{id}")
+    public Response getFilesById(@PathVariable("id") Integer id) {
+        FileInfo fileInfo = fileService.getFileInfoById(id);
+        return fileInfo == null ? Response.errorMsg("获取文件列表失败！")
+                : Response.ok(fileInfo);
+    }
+
+    @ResponseBody
+    @PostMapping("/upload")
     public Response handleFileUpload(HttpServletRequest request) {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         Integer userId = Integer.valueOf(request.getParameter("id"));
         try {
             int lines = fileService.batch(files, userId);
+            System.out.println(lines);
             return lines <= 0 ? Response.errorMsg("上传失败！") : Response.ok();
         } catch (FileException e) {
             return Response.errorMsg(e.getMsg());

@@ -4,6 +4,7 @@ import com.gpms.dao.domain.entity.User;
 import com.gpms.service.UserService;
 import com.gpms.utils.Constant;
 import com.gpms.utils.Response;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -22,6 +23,12 @@ public class UserController {
 //    public String greeting(User greeting) {
 //        return greeting.toString();
 //    }
+    @GetMapping("/{id}")
+    public Response getUserById(@PathVariable("id") Integer id) {
+        User user = userService.getUserById(id);
+        return user == null ? Response.errorMsg("获取用户信息失败！")
+                : Response.ok(user);
+    }
 
     @GetMapping(value = "")
     public Response getUsers(

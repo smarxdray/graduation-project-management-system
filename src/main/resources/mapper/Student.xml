@@ -38,16 +38,30 @@
         </association>
     </resultMap>
 
-    <select id="selectStudentsNotAllotted" resultMap="studentResultMap">
-        select u.*,
-               s.*,
-               s.id s_id,
-               s.status s_status,
-               s.update_time s_update_time,
-               s.create_time s_create_time
+    <sql id="selectStudent">
+        select  u.*,
+                s.*,
+                s.id s_id,
+                s.status s_status,
+                s.update_time s_update_time,
+                s.create_time s_create_time
         from (select * from user where user.role = 5) as u
-        left join student s on s.owner = u.id
-        where s.teacher is null;
+                 left join student s on s.owner = u.id
+    </sql>
+
+    <select id="selectStudentsByTeacher" resultMap="studentResultMap">
+        <include refid="selectStudent"/>
+        where s.teacher = #{teacherId};
+    </select>
+
+    <select id="selectStudentsAllottedOrNot" resultMap="studentResultMap">
+        <include refid="selectStudent"/>
+        <if test="allotted == true">
+            where s.teacher is not null;
+        </if>
+        <if test="allotted == false">
+            where s.teacher is null;
+        </if>
     </select>
 <!--    <select id="selectStudentsNotAllotted" resultType="Student">-->
 <!--        select s.*,-->
@@ -69,12 +83,5 @@
 <!--        left join college c on student.college = c.id-->
 <!--        left join major m on student.major = m.id-->
 <!--        where student.teacher is null;-->
-<!--    </select>-->
-
-<!--    <select id="selectStudentListByTeacher" resultType="Student">-->
-<!--        select  s.id-->
-<!--        from (select * from user where user.role = 5) as s-->
-<!--        left join student on student.owner = s.id-->
-<!--        where student.teacher = #{teacherId};-->
 <!--    </select>-->
 </mapper>

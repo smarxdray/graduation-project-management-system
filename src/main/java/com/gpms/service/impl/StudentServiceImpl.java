@@ -16,8 +16,20 @@ public class StudentServiceImpl implements StudentService {
     StudentMapper studentMapper;
 
     @Override
-    public List<Student> getStudentNotAllotted() {
-        return studentMapper.selectStudentsNotAllotted();
+    public List<Student> getStudentsAllottedOrNot(boolean allotted) {
+        return studentMapper.selectStudentsAllottedOrNot(allotted);
+    }
+
+    @Override
+    public List<Student> getStudentsByTeacher(Integer teacherId) {
+        return studentMapper.selectStudentsByTeacher(teacherId);
+    }
+
+    @Override
+    public List<StudentDetail> getStudentDetailsByTeacher(Integer teacherId) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("teacher", teacherId);
+        return studentMapper.selectList(wrapper);
     }
 
     @Override
