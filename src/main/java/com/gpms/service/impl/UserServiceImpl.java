@@ -21,6 +21,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByCode(String code) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("code", code);
+        return userMapper.selectOne(wrapper);
+    }
+
+    @Override
     public List<User> getUsers() {
         return userMapper.selectList(null);
     }
