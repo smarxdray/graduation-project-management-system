@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gpms.dao.mapper.StudentMapper">
+    <resultMap id="studentResultMap" type="Student">
+        <association property="basic" javaType="com.gpms.dao.domain.entity.User">
+            <result property="id" column="id"/>
+            <result property="name" column="name"/>
+            <result property="gender" column="gender"/>
+            <result property="status" column="status"/>
+            <result property="code" column="code"/>
+            <result property="phone" column="phone"/>
+            <result property="email" column="email"/>
+            <result property="desc" column="desc"/>
+            <result property="avatarUri" column="avatar_uri"/>
+            <result property="salt" column="salt"/>
+            <result property="password" column="password"/>
+            <result property="commentDisabled" column="comment_disabled"/>
+            <result property="notifyDisabled" column="notify_disabled"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="createTime" column="create_time"/>
+        </association>
+        <association property="detail" javaType="com.gpms.dao.domain.entity.StudentDetail">
+            <result property="id" column="s_id"/>
+            <result property="owner" column="owner"/>
+            <result property="teacher" column="teacher"/>
+            <result property="status" column="s_status"/>
+            <result property="projectTitle" column="project_title"/>
+            <result property="fileUri" column="file_uri"/>
+            <result property="reviewTimes" column="review_times"/>
+            <result property="college" column="college"/>
+            <result property="major" column="major"/>
+            <result property="gpa" column="gpa"/>
+            <result property="address" column="address"/>
+            <result property="allottedDisabled" column="allotted_disabled"/>
+            <result property="updateTime" column="s_update_time"/>
+            <result property="createTime" column="s_create_time"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectStudent">
+        select  u.*,
+                s.*,
+                s.id s_id,
+                s.status s_status,
+                s.update_time s_update_time,
+                s.create_time s_create_time
+        from (select * from user where user.role = 5) as u
+                 left join student s on s.owner = u.id
+    </sql>
+
+    <select id="selectStudentsByTeacher" resultMap="studentResultMap">
+        <include refid="selectStudent"/>
+        where s.teacher = #{teacherId};
+    </select>
+
+    <select id="selectStudentsAllottedOrNot" resultMap="studentResultMap">
+        <include refid="selectStudent"/>
+        <if test="allotted == true">
+            where s.teacher is not null;
+        </if>
+        <if test="allotted == false">
+            where s.teacher is null;
+        </if>
+    </select>
+<!--    <select id="selectStudentsNotAllotted" resultType="Student">-->
+<!--        select s.*,-->
+<!--               student.status statusStudent,-->
+<!--               student.project_title projectTitle,-->
+<!--               student.file_uri fileUri,-->
+<!--               student.review_times,-->
+<!--               c.id college,-->
+<!--               m.id major,-->
+<!--               student.gpa,-->
+<!--               address,-->
+<!--               allotted_disabled,-->
+<!--               s.comment_disabled,-->
+<!--               student.update_time updateTimeStudent,-->
+<!--               student.create_time createTimeStudent-->
+<!--        from (select * from user where user.role = 5) as s-->
+<!--        left join student on student.owner = s.id-->
+<!--        left join user on student.teacher = user.id-->
+<!--        left join college c on student.college = c.id-->
+<!--        left join major m on student.major = m.id-->
+<!--        where student.teacher is null;-->
+<!--    </select>-->
+</mapper>

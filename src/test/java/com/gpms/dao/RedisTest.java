@@ -1,9 +1,8 @@
 package com.gpms.dao;
 
 import com.gpms.BaseTest;
-import com.gpms.dao.domain.Student;
 import com.gpms.dao.domain.entity.User;
-import com.gpms.service.impl.RedisHelperImpl;
+import com.gpms.service.RedisService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,9 @@ public class RedisTest extends BaseTest {
     private RedisTemplate redisTemplate;
 
     @Autowired
-    private RedisHelperImpl redisHelper;
+    private RedisService redisService;
 
-    @Ignore
+    @Test
     public void test() throws Exception{
 //        基本写法
 //        stringRedisTemplate.opsForValue().set("aaa","111");
@@ -29,24 +28,7 @@ public class RedisTest extends BaseTest {
 //        System.out.println(stringRedisTemplate.opsForValue().get("aaa"));
         User user = new User();
         user.setName("ray");
-        redisHelper.valuePut("aaa",user);
-        System.out.println(redisHelper.getValue("aaa"));
-    }
-
-    @Test
-    public void testObj() throws Exception {
-        User user=new User();
-        user.setName("Jerry");
-
-        ValueOperations<String, User> operations=redisTemplate.opsForValue();
-        operations.set("502", user);
-        Thread.sleep(500);
-        boolean exists=redisTemplate.hasKey("502");
-        if(exists){
-            System.out.println(redisTemplate.opsForValue().get("502"));
-        }else{
-            System.out.println("exists is false");
-        }
-        // Assert.assertEquals("aa", operations.get("com.neo.f").getUserName());
+        redisService.set("aaa",user);
+        System.out.println(redisService.get("aaa"));
     }
 }

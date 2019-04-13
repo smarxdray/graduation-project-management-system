@@ -3,10 +3,13 @@ package com.gpms.dao.domain.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
+@TableName("user")
 public class User {
     public interface View {};
     public interface AdminView extends View {};
@@ -110,7 +113,7 @@ public class User {
      *
      * @mbg.generated Fri Apr 05 15:17:27 CST 2019
      */
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String salt;
 
     /**
@@ -120,6 +123,7 @@ public class User {
      *
      * @mbg.generated Fri Apr 05 15:17:27 CST 2019
      */
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     /**

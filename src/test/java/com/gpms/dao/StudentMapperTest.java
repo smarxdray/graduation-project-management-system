@@ -16,7 +16,7 @@ public class StudentMapperTest extends BaseTest {
     public void testSelect() {
         System.out.println(("----- selectAll method test ------"));
 
-        List<Student> studentList = studentMapper.selectStudentsNotAllotted();
-        for (Student s : studentList) System.out.println(s);
+//        List<Student> studentList = studentMapper.selectStudentsNotAllotted();
+//        for (Student s : studentList) System.out.println(s.getDetail());
     }
 }

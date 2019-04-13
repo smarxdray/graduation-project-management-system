@@ -1,9 +1,13 @@
 package com.gpms.dao.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.util.Date;
 
+@TableName("private_notice")
 public class PrivateNotice {
     /**
      *
@@ -13,6 +17,7 @@ public class PrivateNotice {
      * @mbg.generated Fri Apr 05 15:17:56 CST 2019
      */
     @TableField("`id`")
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**

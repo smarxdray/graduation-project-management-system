@@ -42,10 +42,10 @@ CREATE TABLE IF NOT EXISTS `teacher_title`(
 CREATE TABLE IF NOT EXISTS `role`(
 	`id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	`name` VARCHAR(16) NOT NULL UNIQUE
-	    COMMENT 'admin, teacher, student, visitor, forbidden',
+	    COMMENT 'admin, teacher, student, visitor',
 	`desc` VARCHAR(128),
 	`type` INT UNSIGNED DEFAULT 0
-		COMMENT '0：元角色（用户不可编辑、删除，如admin、forbidden）
+		COMMENT '0：元角色（用户不可编辑、删除，如admin）
 				 1：普通角色',
 	`status` INT DEFAULT 0
 		COMMENT '-1：禁用
@@ -66,12 +66,13 @@ CREATE TABLE IF NOT EXISTS `user`(
 		 COMMENT '-1：禁用
        			   0：正常',
 	 `code` VARCHAR(16) UNIQUE,
-	 `phone` VARCHAR(16),
-	 `email` VARCHAR(32),
+	 `phone` VARCHAR(16) UNIQUE,
+	 `email` VARCHAR(32) UNIQUE,
+	 `openid` VARCHAR(32),
 	 `desc` VARCHAR(128),
 	 `avatar_uri` VARCHAR(128),
 	 `salt` VARCHAR(64),
-	 `password` VARCHAR(64) NOT NULL,
+	 `password` VARCHAR(64),
 	 `comment_disabled` TINYINT(1) DEFAULT 0
 		 COMMENT '禁用功能：评论',
 	 `notify_disabled` TINYINT(1) DEFAULT 0
@@ -79,6 +80,23 @@ CREATE TABLE IF NOT EXISTS `user`(
 	 `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	 `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	 FOREIGN KEY (`role`) REFERENCES `role`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `project`(
+	`id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	`teacher` INT UNSIGNED NOT NULL,
+	`title` VARCHAR(32) NOT NULL,
+	`content` LONGTEXT NOT NULL,
+	`status` INT DEFAULT 0
+		COMMENT '0: 待审核
+				 1：审核通过
+                 10：审核通过，未认领
+                 11: 审核通过已认领',
+	`student` INT UNSIGNED,
+	`update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (`teacher`) REFERENCES `user`(`id`),
+	FOREIGN KEY (`student`) REFERENCES `user`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `admin`(
@@ -126,8 +144,8 @@ CREATE TABLE IF NOT EXISTS `student`(
                  11：已分配导师，已分配课题，毕设审核中
                  110：毕设审核未通过
                  111：毕设审核通过',
-	`project_title` VARCHAR(32),
-	`file_uri` VARCHAR(128),
+	`project` INT UNSIGNED,
+	`file_dir` VARCHAR(128),
     `review_times` INT UNSIGNED DEFAULT 0,
     `college` INT UNSIGNED,
     `major` INT UNSIGNED,
@@ -141,6 +159,7 @@ CREATE TABLE IF NOT EXISTS `student`(
 	`create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (`owner`) REFERENCES `user`(`id`),
 	FOREIGN KEY (`teacher`) REFERENCES `user`(`id`),
+	FOREIGN KEY (`project`) REFERENCES `project`(`id`),
 	FOREIGN KEY (`college`) REFERENCES `college`(`id`),
 	FOREIGN KEY (`major`) REFERENCES `major`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -215,4 +234,25 @@ CREATE TABLE IF NOT EXISTS `comment`(
 	`update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	`create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (`author`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `file`(
+   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+   `owner` INT UNSIGNED NOT NULL,
+   `name` VARCHAR(32),
+   `extension` VARCHAR(8),
+   `path` VARCHAR(128) NOT NULL
+        COMMENT '/dir/name.extension',
+   `size` INT UNSIGNED,
+   `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+   FOREIGN KEY (`owner`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `management`(
+	 `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	 `item` VARCHAR(32) NOT NULL,
+	 `val` INT NOT NULL,
+	 `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	 `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
