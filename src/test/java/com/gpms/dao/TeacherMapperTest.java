@@ -23,7 +23,7 @@ public class TeacherMapperTest extends BaseTest {
         System.out.println(("----- selectAll method test ------"));
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id",  1);
-        List<Teacher> teacherList = teacherMapper.selectTeacherList();
+        List<Teacher> teacherList = teacherMapper.selectTeachersByMajor(1);
 //        Assert.assertEquals(1, userList.size());
         for (Teacher teacher : teacherList) System.out.println(teacher);
     }

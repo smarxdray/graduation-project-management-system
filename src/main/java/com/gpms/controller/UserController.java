@@ -3,9 +3,11 @@ package com.gpms.controller;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.gpms.annotation.UserLoginToken;
+import com.gpms.dao.domain.Teacher;
 import com.gpms.dao.domain.entity.Role;
 import com.gpms.dao.domain.entity.User;
 import com.gpms.service.RoleService;
+import com.gpms.service.TeacherService;
 import com.gpms.service.UserService;
 import com.gpms.utils.Constant;
 import com.gpms.utils.Response;
@@ -27,6 +29,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private TeacherService teacherService;
 
 //    @MessageMapping("/hello")
 //    @SendTo("/topic/greeting")
@@ -89,7 +93,9 @@ public class UserController {
         } else {
             if (!u.getPassword().equals(user.getPassword())){
                 return Response.errorMsg("登录失败,密码错误");
-            }else {
+            }else if (u.getStatus() == -1) {
+                return Response.errorMsg("登录失败,账号被禁用");
+            } else{
                 String token= JWT.create().withAudience(u.getCode())
                         .sign(Algorithm.HMAC256(user.getPassword()));
                 Map<String, String> map = new HashMap<>();
@@ -117,5 +123,12 @@ public class UserController {
         int lines = userService.deleteUserById(id);
         if (lines == 1) return Response.ok();
         else return Response.errorMsg("删除失败！");
+    }
+
+    @GetMapping("/teachers")
+    public Response getTeachersByMajor(@RequestParam("major") Integer majorId) {
+        List<Teacher> teachers = teacherService.getTeachersByMajor(majorId);
+        return teachers == null ? Response.errorMsg("获取导师列表失败！")
+                : Response.ok(teachers);
     }
 }

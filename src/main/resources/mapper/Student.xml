@@ -46,7 +46,7 @@
                 s.update_time s_update_time,
                 s.create_time s_create_time
         from (select * from user where user.role = 5) as u
-                 left join student s on s.owner = u.id
+        left join student s on s.owner = u.id
     </sql>
 
     <select id="selectStudentsByTeacher" resultMap="studentResultMap">
