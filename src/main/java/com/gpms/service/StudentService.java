@@ -6,9 +6,9 @@ import com.gpms.dao.domain.entity.StudentDetail;
 import java.util.List;
 
 public interface StudentService {
+    int addStudentDetail(StudentDetail detail);
     List<Student> getStudentsAllottedOrNot(boolean allotted);
     List<Student> getStudentsByTeacher(Integer teacherId);
     List getStudentDetailsByTeacher(Integer teacherId);
-    int insertStudentDetail(StudentDetail detail);
-    int updateStudentDetail(StudentDetail detail);
+    int updateStudentDetailById(StudentDetail detail);
 }

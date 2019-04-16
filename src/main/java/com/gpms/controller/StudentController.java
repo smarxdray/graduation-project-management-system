@@ -19,7 +19,7 @@ public class StudentController {
     @Autowired
     StudentService studentService;
 
-    @GetMapping("")
+    @GetMapping()
     public Response getStudents(@RequestParam(name = Constant.PARAM_ALLOTTED, required = false) Boolean allotted,
                                 @RequestParam(name = "teacher", required = false) Integer teacherId) {
         List<Student> studentList = null;
