@@ -5,5 +5,5 @@ import com.gpms.dao.domain.entity.StudentDetail;
 import java.util.List;
 
 public interface AssignmentService {
-    int assignBatchStudents(List<StudentDetail> details);
+    int setAssignments(List<StudentDetail> assigned, List<StudentDetail> unassigned);
 }

@@ -26,7 +26,7 @@
             <result property="teacher" column="teacher"/>
             <result property="status" column="s_status"/>
             <result property="projectTitle" column="project_title"/>
-            <result property="fileUri" column="file_uri"/>
+            <result property="fileDir" column="file_uri"/>
             <result property="reviewTimes" column="review_times"/>
             <result property="college" column="college"/>
             <result property="major" column="major"/>
@@ -67,7 +67,7 @@
 <!--        select s.*,-->
 <!--               student.status statusStudent,-->
 <!--               student.project_title projectTitle,-->
-<!--               student.file_uri fileUri,-->
+<!--               student.file_uri fileDir,-->
 <!--               student.review_times,-->
 <!--               c.id college,-->
 <!--               m.id major,-->

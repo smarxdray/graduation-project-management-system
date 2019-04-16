@@ -1,6 +1,7 @@
 package com.gpms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.gpms.dao.domain.Student;
 import com.gpms.dao.domain.entity.StudentDetail;
 import com.gpms.dao.mapper.StudentMapper;
@@ -33,19 +34,14 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public int insertStudentDetail(StudentDetail detail) {
+    public int addStudentDetail(StudentDetail detail) {
         return studentMapper.insert(detail);
     }
 
     @Override
-    public int updateStudentDetail(StudentDetail detail) {
-        QueryWrapper wrapper = new QueryWrapper();
-        wrapper.eq("owner", detail.getOwner());
-        StudentDetail one = studentMapper.selectOne(wrapper);
-        if (one == null) {
-            return insertStudentDetail(detail);
-        } else {
-            return insertStudentDetail(detail);
-        }
+    public int updateStudentDetailById(StudentDetail detail) {
+        UpdateWrapper<StudentDetail> wrapper = new UpdateWrapper<>();
+        wrapper.set("teacher", null);
+        return studentMapper.update(detail, wrapper);
     }
 }

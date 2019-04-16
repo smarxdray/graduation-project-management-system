@@ -68,7 +68,6 @@ CREATE TABLE IF NOT EXISTS `user`(
 	 `code` VARCHAR(16) UNIQUE,
 	 `phone` VARCHAR(16) UNIQUE,
 	 `email` VARCHAR(32) UNIQUE,
-	 `openid` VARCHAR(32),
 	 `desc` VARCHAR(128),
 	 `avatar_uri` VARCHAR(128),
 	 `salt` VARCHAR(64),
@@ -88,7 +87,8 @@ CREATE TABLE IF NOT EXISTS `project`(
 	`title` VARCHAR(32) NOT NULL,
 	`content` LONGTEXT NOT NULL,
 	`status` INT DEFAULT 0
-		COMMENT '0: 待审核
+		COMMENT '-1：草稿
+                 0: 待审核
 				 1：审核通过
                  10：审核通过，未认领
                  11: 审核通过已认领',

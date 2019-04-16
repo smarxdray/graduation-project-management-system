@@ -31,7 +31,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public int updateTeacherDetail(TeacherDetail detail) {
+    public int updateTeacherDetailByOwner(TeacherDetail detail) {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("owner", detail.getOwner());
         return teacherMapper.update(detail, wrapper);
@@ -42,6 +42,7 @@ public class TeacherServiceImpl implements TeacherService {
     public int addProjects(List<Project> projects) {
         int lines = 0;
         for (Project p : projects) {
+            p.setStatus(0);
             lines += projectMapper.insert(p);
         }
         return lines;
