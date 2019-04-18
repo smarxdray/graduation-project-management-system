@@ -6,10 +6,7 @@ import com.gpms.service.StudentService;
 import com.gpms.utils.Response;
 import com.gpms.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,5 +35,16 @@ public class StudentController {
         studentDetails = studentService.getStudentDetailsByTeacher(teacherId);
         return studentDetails == null ? Response.errorMsg("获取学生详细信息失败！")
                 : Response.ok(studentDetails);
+    }
+
+    @PutMapping("/project")
+    public Response setProject(@RequestParam("student") Integer student,
+                               @RequestParam("project") Integer project) {
+        if (student != null && project != null) {
+            int lines = studentService.selectProject(student, project);
+            return lines <= 0 ? Response.errorMsg("操作失败！")
+                    : Response.ok();
+        }
+        return null;
     }
 }

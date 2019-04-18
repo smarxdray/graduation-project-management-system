@@ -29,6 +29,8 @@ public class InfoController {
         List<Major> majors = null;
         if (collegeId != null) {
             majors =  infoService.getMajorsByCollege(collegeId);
+        } else {
+            majors = infoService.getMajors();
         }
         return majors == null ? Response.errorMsg("获取专业列表失败！")
                 : Response.ok(majors);

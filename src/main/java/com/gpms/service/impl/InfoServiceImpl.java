@@ -24,6 +24,11 @@ public class InfoServiceImpl implements InfoService {
     }
 
     @Override
+    public List<Major> getMajors() {
+        return majorMapper.selectList(null);
+    }
+
+    @Override
     public List<Major> getMajorsByCollege(Integer collegeId) {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("college", collegeId);

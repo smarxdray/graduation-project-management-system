@@ -11,4 +11,5 @@ public interface StudentService {
     List<Student> getStudentsByTeacher(Integer teacherId);
     List getStudentDetailsByTeacher(Integer teacherId);
     int updateStudentDetailById(StudentDetail detail);
+    int selectProject(Integer student, Integer project);
 }

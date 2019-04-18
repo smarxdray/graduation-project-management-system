@@ -1,6 +1,7 @@
 package com.gpms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.gpms.dao.domain.Teacher;
 import com.gpms.dao.domain.entity.Project;
 import com.gpms.dao.domain.entity.TeacherDetail;
@@ -26,6 +27,18 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public List<Teacher> getTeachers(String name, Integer college, Integer major, Integer projectStatus) {
+        return teacherMapper.selectTeachers(name, college, major, projectStatus);
+    }
+
+    @Override
+    public TeacherDetail getTeacherDetailByOwner(Integer owner) {
+        QueryWrapper<TeacherDetail> wrapper = new QueryWrapper<>();
+        wrapper.eq("owner", owner);
+        return teacherMapper.selectOne(wrapper);
+    }
+
+    @Override
     public int insertTeacherDetail(TeacherDetail detail) {
         return teacherMapper.insert(detail);
     }
@@ -40,11 +53,33 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     @Transactional
     public int addProjects(List<Project> projects) {
+        if (projects == null || projects.size() == 0) return 0;
+        Integer teacher = projects.get(0).getTeacher();
+        Integer status = projects.get(0).getStatus();
         int lines = 0;
         for (Project p : projects) {
-            p.setStatus(0);
-            lines += projectMapper.insert(p);
+            int ln = projectMapper.updateById(p);
+            if (ln <= 0) {
+                ln = projectMapper.insert(p);
+            }
+            lines += ln;
         }
+        UpdateWrapper<TeacherDetail> w = new UpdateWrapper<>();
+        w.eq("owner", teacher);
+        w.set("project_status", status);
+        teacherMapper.update(new TeacherDetail(), w);
         return lines;
+    }
+
+    @Override
+    public List<Project> getProjectsByTeacher(Integer id) {
+        QueryWrapper<Project> wrapper = new QueryWrapper<>();
+        wrapper.eq("teacher", id);
+        return projectMapper.selectList(wrapper);
+    }
+
+    @Override
+    public List<Teacher> getTeachersHavingProjects(Integer projectStatus) {
+        return teacherMapper.selectTeachersHavingProjects(projectStatus);
     }
 }

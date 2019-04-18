@@ -3,12 +3,13 @@ package com.gpms.controller;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.gpms.annotation.UserLoginToken;
+import com.gpms.dao.domain.Student;
 import com.gpms.dao.domain.Teacher;
 import com.gpms.dao.domain.entity.Role;
+import com.gpms.dao.domain.entity.StudentDetail;
+import com.gpms.dao.domain.entity.TeacherDetail;
 import com.gpms.dao.domain.entity.User;
-import com.gpms.service.RoleService;
-import com.gpms.service.TeacherService;
-import com.gpms.service.UserService;
+import com.gpms.service.*;
 import com.gpms.utils.Constant;
 import com.gpms.utils.Response;
 import com.sun.org.apache.regexp.internal.RE;
@@ -31,6 +32,8 @@ public class UserController {
     private RoleService roleService;
     @Autowired
     private TeacherService teacherService;
+    @Autowired
+    private ResourceService resourceService;
 
 //    @MessageMapping("/hello")
 //    @SendTo("/topic/greeting")
@@ -126,9 +129,46 @@ public class UserController {
     }
 
     @GetMapping("/teachers")
-    public Response getTeachersByMajor(@RequestParam("major") Integer majorId) {
-        List<Teacher> teachers = teacherService.getTeachersByMajor(majorId);
-        return teachers == null ? Response.errorMsg("获取导师列表失败！")
+    public Response getTeachersByMajor(@RequestParam(name = "major", required = false) Integer majorId,
+                                       @RequestParam(name = "project-status", required = false) Integer projectStatus) {
+        if (majorId != null) {
+            List<Teacher> teachers = teacherService.getTeachersByMajor(majorId);
+            return teachers == null ? Response.errorMsg("获取导师列表失败！")
+                    : Response.ok(teachers);
+        } else if (projectStatus != null) {
+            List<Teacher> teachers = teacherService.getTeachersHavingProjects(projectStatus);
+            return teachers == null ? Response.errorMsg("获取信息失败！")
+                    : Response.ok(teachers);
+        } else {
+            return Response.errorMsg("错误的请求！");
+        }
+
+    }
+
+    @PostMapping("/teachers")
+    public Response getTeacherByQuery(@RequestBody Map<String, Object> query) {
+        String name = (String) query.get("name");
+        System.out.println(name);
+        Integer college = (Integer) query.get("college");
+        System.out.println(college);
+        Integer major = (Integer) query.get("major");
+        System.out.println(major);
+        Integer projectStatus = (Integer) query.get("projectStatus");
+        List<Teacher> teachers = teacherService.getTeachers(name, college, major, projectStatus);
+        return teachers == null ? Response.errorMsg("获取教师信息失败！")
                 : Response.ok(teachers);
+    }
+
+    @GetMapping("/teachers/details")
+    public Response getTeacherDetailByOwner(@RequestParam("id") Integer ownerId) {
+        TeacherDetail teacherDetail = teacherService.getTeacherDetailByOwner(ownerId);
+        return teacherDetail == null ? Response.errorMsg("获取教师详情失败！")
+                : Response.ok(teacherDetail);
+    }
+
+    @GetMapping("/students/details/{id}")
+    public Response getStudentDetailByOwner(@PathVariable("id") Integer owner) {
+        StudentDetail detail = resourceService.getStudentDetail(owner);
+        return detail == null ? Response.errorMsg("失败！") : Response.ok(detail);
     }
 }

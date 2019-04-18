@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface InfoService {
     List<College> getColleges();
+    List<Major> getMajors();
     List<Major> getMajorsByCollege(Integer collegeId);
 }
