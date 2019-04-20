@@ -1,5 +1,7 @@
 package com.gpms.utils;
 
+import java.io.File;
+
 public class Constant {
     public static final int ROLE_ADMIN = 1;
     public static final int ROLE_FORBIDDEN = 2;
@@ -18,7 +20,7 @@ public class Constant {
     public static final String PARAM_ROLE = "role";
     public static final String PARAM_ALLOTTED = "allotted";
 
-    public static final String FILE_DIR = "S:\\ray\\Desktop\\gpms\\";
+    public static final String FILE_DIR = "S:" + File.separator + "ray" + File.separator + "Desktop" + File.separator + "gpms";
 
     //webSocket相关配置
     //链接地址

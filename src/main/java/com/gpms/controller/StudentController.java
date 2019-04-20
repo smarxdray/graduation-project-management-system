@@ -2,7 +2,8 @@ package com.gpms.controller;
 
 import com.gpms.dao.domain.Student;
 import com.gpms.dao.domain.entity.StudentDetail;
-import com.gpms.service.StudentService;
+import com.gpms.service.ReadService;
+import com.gpms.service.UpdateService;
 import com.gpms.utils.Response;
 import com.gpms.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +15,18 @@ import java.util.List;
 @RequestMapping("/students")
 public class StudentController {
     @Autowired
-    StudentService studentService;
+    private ReadService readService;
+    @Autowired
+    private UpdateService updateService;
 
     @GetMapping()
     public Response getStudents(@RequestParam(name = Constant.PARAM_ALLOTTED, required = false) Boolean allotted,
                                 @RequestParam(name = "teacher", required = false) Integer teacherId) {
         List<Student> studentList = null;
         if (allotted != null) {
-                studentList = studentService.getStudentsAllottedOrNot(allotted);
+                studentList = readService.getStudentsAllottedOrNot(allotted);
         } else if (teacherId != null) {
-            studentList = studentService.getStudentsByTeacher(teacherId);
+            studentList = readService.getStudentsByTeacher(teacherId);
         }
         return studentList == null ? Response.errorMsg("获取列表失败！")
                 : Response.ok(studentList);
@@ -32,7 +35,7 @@ public class StudentController {
     @GetMapping("/details")
     public Response getStudentDetails(@RequestParam("teacher") Integer teacherId) {
         List<StudentDetail> studentDetails = null;
-        studentDetails = studentService.getStudentDetailsByTeacher(teacherId);
+        studentDetails = readService.getStudentDetailsByTeacher(teacherId);
         return studentDetails == null ? Response.errorMsg("获取学生详细信息失败！")
                 : Response.ok(studentDetails);
     }
@@ -41,8 +44,8 @@ public class StudentController {
     public Response setProject(@RequestParam("student") Integer student,
                                @RequestParam("project") Integer project) {
         if (student != null && project != null) {
-            int lines = studentService.selectProject(student, project);
-            return lines <= 0 ? Response.errorMsg("操作失败！")
+            boolean success = updateService.selectProject(student, project);
+            return success ? Response.errorMsg("操作失败！")
                     : Response.ok();
         }
         return null;

@@ -5,10 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.gpms.annotation.UserLoginToken;
 import com.gpms.dao.domain.Student;
 import com.gpms.dao.domain.Teacher;
-import com.gpms.dao.domain.entity.Role;
-import com.gpms.dao.domain.entity.StudentDetail;
-import com.gpms.dao.domain.entity.TeacherDetail;
-import com.gpms.dao.domain.entity.User;
+import com.gpms.dao.domain.entity.*;
 import com.gpms.service.*;
 import com.gpms.utils.Constant;
 import com.gpms.utils.Response;
@@ -27,25 +24,19 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
     @Autowired
-    private UserService userService;
+    private CreateService createService;
     @Autowired
-    private RoleService roleService;
+    private ReadService readService;
     @Autowired
-    private TeacherService teacherService;
+    private UpdateService updateService;
     @Autowired
-    private ResourceService resourceService;
+    private DeleteService deleteService;
 
 //    @MessageMapping("/hello")
 //    @SendTo("/topic/greeting")
 //    public String greeting(User greeting) {
 //        return greeting.toString();
 //    }
-    @GetMapping("/{id}")
-    public Response getUserById(@PathVariable("id") Integer id) {
-        User user = userService.getUserById(id);
-        return user == null ? Response.errorMsg("获取用户信息失败！")
-                : Response.ok(user);
-    }
 
     @GetMapping()
     public Response getUsers(@RequestParam(name = "token", required = false) String token,
@@ -53,44 +44,104 @@ public class UserController {
         List<User> userList = null;
         if (token != null) {
             String code = JWT.decode(token).getAudience().get(0);
-            User user = userService.getUserByCode(code);
-            List<Role> roles = roleService.getRoles();
+            User user = readService.getUserByCode(code);
+            List<Role> roles = readService.getRoles();
             Map<String, Object> map = new HashMap<>();
             map.put("user", user);
             map.put("roles", roles);
             return (user == null || roles == null) ? Response.errorMsg("获取用户信息失败！")
                     : Response.ok(map);
-        }
-        if (type == null) {
-            userList = userService.getUsers();
-        } else {
+        } else if (type != null) {
             switch (type) {
                 case Constant.ALL:
-                    userList = userService.getUsers();
+                    userList = readService.getUsers();
                     break;
                 case Constant.TEACHER:
-                    userList = userService.getTeachers();
+                    userList = readService.getTeachers();
                     break;
                 case Constant.STUDENT:
-                    userList = userService.getStudents();
+                    userList = readService.getStudents();
                     break;
                 default: break;
             }
+        } else {
+            userList = readService.getUsers();
         }
-        if (userList == null) return Response.errorMsg("获取列表失败！");
-        else return Response.ok(userList);
+        return userList == null ? Response.errorMsg("获取列表失败！") : Response.ok(userList);
+    }
+
+    @GetMapping("/{id}")
+    public Response getUserById(@PathVariable("id") Integer id) {
+        User user = readService.getUserById(id);
+        return user == null ? Response.errorMsg("获取用户信息失败！")
+                : Response.ok(user);
+    }
+
+    @GetMapping("/{id}/detail")
+    public Response getTeacherDetailByOwner(@PathVariable("id") Integer id) {
+        User user = readService.getUserById(id);
+        Object detail = null;
+        switch (user.getRole()) {
+            case 1:
+                break;
+            case 4:
+                detail = readService.getTeacherDetailByOwner(id);
+                break;
+            case 5:
+                detail = readService.getStudentDetail(id);
+                break;
+        }
+        return detail == null ? Response.errorMsg("获取账号详情失败！")
+                : Response.ok(detail);
+    }
+
+    @GetMapping("/admins")
+    public Response getAdmins() {
+        return null;
+    }
+
+    @GetMapping("/teachers")
+    public Response getTeachers(@RequestParam(name = "major", required = false) Integer major,
+                                @RequestParam(name = "project-status", required = false) Integer projectStatus) {
+        if (major != null) {
+            List<Teacher> teachers = readService.getTeachersByMajor(major);
+            return teachers == null ? Response.errorMsg("获取导师列表失败！")
+                    : Response.ok(teachers);
+        } else if (projectStatus != null) {
+            List<Teacher> teachers = readService.getTeachersHavingProjects(projectStatus);
+            return teachers == null ? Response.errorMsg("获取信息失败！")
+                    : Response.ok(teachers);
+        } else {
+            return Response.errorMsg("错误的请求！");
+        }
+    }
+
+    @PostMapping("/teachers")
+    public Response getTeachers(@RequestBody Map<String, Object> query) {
+        String name = (String) query.get("name");
+        Integer college = (Integer) query.get("college");
+        Integer major = (Integer) query.get("major");
+        Integer projectStatus = (Integer) query.get("projectStatus");
+        List<Teacher> teachers = readService.getTeachers(name, college, major, projectStatus);
+        return teachers == null ? Response.errorMsg("获取教师信息失败！")
+                : Response.ok(teachers);
+    }
+
+    @GetMapping("/students")
+    public Response getStudents() {
+        return null;
     }
 
     @PostMapping()
     public Response addUser(@RequestBody User user) {
-        int lines = userService.addUser(user);
+        int lines = createService.addUser(user);
         if (lines == 1) return Response.ok();
         else return Response.errorMsg("添加失败！");
     }
 
     @PostMapping("/login")
     public Response login(@RequestBody User user){
-        User u =userService.getUserByCode(user.getCode());
+        User u =readService.getUserByCode(user.getCode());
         if(u == null){
             return Response.errorMsg("登录失败,用户不存在");
         } else {
@@ -116,59 +167,15 @@ public class UserController {
 
     @PutMapping()
     public Response updateUser(@RequestBody User user) {
-        int lines = userService.updateUser(user);
+        int lines = updateService.updateUser(user);
         if (lines == 1) return Response.ok();
         else  return Response.errorMsg("设置失败！");
     }
 
     @DeleteMapping()
     public Response deleteUser(@RequestParam(name = "id") Integer id) {
-        int lines = userService.deleteUserById(id);
+        int lines = deleteService.deleteUserById(id);
         if (lines == 1) return Response.ok();
         else return Response.errorMsg("删除失败！");
-    }
-
-    @GetMapping("/teachers")
-    public Response getTeachersByMajor(@RequestParam(name = "major", required = false) Integer majorId,
-                                       @RequestParam(name = "project-status", required = false) Integer projectStatus) {
-        if (majorId != null) {
-            List<Teacher> teachers = teacherService.getTeachersByMajor(majorId);
-            return teachers == null ? Response.errorMsg("获取导师列表失败！")
-                    : Response.ok(teachers);
-        } else if (projectStatus != null) {
-            List<Teacher> teachers = teacherService.getTeachersHavingProjects(projectStatus);
-            return teachers == null ? Response.errorMsg("获取信息失败！")
-                    : Response.ok(teachers);
-        } else {
-            return Response.errorMsg("错误的请求！");
-        }
-
-    }
-
-    @PostMapping("/teachers")
-    public Response getTeacherByQuery(@RequestBody Map<String, Object> query) {
-        String name = (String) query.get("name");
-        System.out.println(name);
-        Integer college = (Integer) query.get("college");
-        System.out.println(college);
-        Integer major = (Integer) query.get("major");
-        System.out.println(major);
-        Integer projectStatus = (Integer) query.get("projectStatus");
-        List<Teacher> teachers = teacherService.getTeachers(name, college, major, projectStatus);
-        return teachers == null ? Response.errorMsg("获取教师信息失败！")
-                : Response.ok(teachers);
-    }
-
-    @GetMapping("/teachers/details")
-    public Response getTeacherDetailByOwner(@RequestParam("id") Integer ownerId) {
-        TeacherDetail teacherDetail = teacherService.getTeacherDetailByOwner(ownerId);
-        return teacherDetail == null ? Response.errorMsg("获取教师详情失败！")
-                : Response.ok(teacherDetail);
-    }
-
-    @GetMapping("/students/details/{id}")
-    public Response getStudentDetailByOwner(@PathVariable("id") Integer owner) {
-        StudentDetail detail = resourceService.getStudentDetail(owner);
-        return detail == null ? Response.errorMsg("失败！") : Response.ok(detail);
     }
 }
