@@ -25,7 +25,7 @@
             <result property="owner" column="owner"/>
             <result property="teacher" column="teacher"/>
             <result property="status" column="s_status"/>
-            <result property="projectTitle" column="project_title"/>
+            <result property="project" column="project"/>
             <result property="fileDir" column="file_uri"/>
             <result property="reviewTimes" column="review_times"/>
             <result property="college" column="college"/>

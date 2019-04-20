@@ -8,7 +8,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.gpms.annotation.PassToken;
 import com.gpms.annotation.UserLoginToken;
 import com.gpms.dao.domain.entity.User;
-import com.gpms.service.UserService;
+import com.gpms.service.ReadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
-    UserService userService;
+    private ReadService readService;
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
         String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
@@ -52,7 +52,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 } catch (JWTDecodeException j) {
                     throw new RuntimeException("401");
                 }
-                User user = userService.getUserByCode(code);
+                User user = readService.getUserByCode(code);
                 if (user == null) {
                     throw new RuntimeException("用户不存在，请重新登录");
                 }

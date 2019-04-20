@@ -84,18 +84,21 @@ CREATE TABLE IF NOT EXISTS `user`(
 CREATE TABLE IF NOT EXISTS `project`(
 	`id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	`teacher` INT UNSIGNED NOT NULL,
+	`reviewer` INT UNSIGNED,
 	`title` VARCHAR(32) NOT NULL,
 	`content` LONGTEXT NOT NULL,
 	`status` INT DEFAULT 0
 		COMMENT '-1：草稿
                  0: 待审核
-				 1：审核通过
-                 10：审核通过，未认领
-                 11: 审核通过已认领',
+				 10：审核未通过
+				 11：审核通过
+                 110：审核通过，未认领
+                 111: 审核通过已认领',
 	`student` INT UNSIGNED,
 	`update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	`create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (`teacher`) REFERENCES `user`(`id`),
+	FOREIGN KEY (`reviewer`) REFERENCES `user`(`id`),
 	FOREIGN KEY (`student`) REFERENCES `user`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -120,6 +123,13 @@ CREATE TABLE IF NOT EXISTS `teacher`(
     `title` INT UNSIGNED,
     `college` INT UNSIGNED,
 	`major` INT UNSIGNED,
+	`project_status` INT DEFAULT -1
+		COMMENT '-1：尚未提交
+                 0: 待审核
+				 10：审核未通过
+				 11：审核通过
+                 110：审核通过，未认领
+                 111: 审核通过已认领',
     `student_number` INT UNSIGNED DEFAULT 0
         COMMENT '指导的学生人数',
     `student_mark` INT UNSIGNED

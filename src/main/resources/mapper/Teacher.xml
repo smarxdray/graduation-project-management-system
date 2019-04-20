@@ -7,6 +7,7 @@
         <association property="basic" javaType="com.gpms.dao.domain.entity.User">
             <result property="id" column="id"/>
             <result property="name" column="name"/>
+            <result property="role" column="role"/>
             <result property="gender" column="gender"/>
             <result property="status" column="status"/>
             <result property="code" column="code"/>
@@ -26,7 +27,7 @@
             <result property="owner" column="owner"/>
             <result property="title" column="title"/>
             <result property="college" column="college"/>
-            <result property="projectTitle" column="project_title"/>
+            <result property="projectStatus" column="project_status"/>
             <result property="major" column="major"/>
             <result property="studentNumber" column="student_number"/>
             <result property="acceptDisabled" column="accept_disabled"/>
@@ -48,5 +49,34 @@
     <select id="selectTeachersByMajor" resultMap="teacherResultMap">
         <include refid="selectTeacher"/>
         where t.major = #{majorId};
+    </select>
+
+    <select id="selectTeachersHavingProjects" resultMap="teacherResultMap">
+        <include refid="selectTeacher"></include>
+        right join project p on p.teacher = u.id
+        <if test="projectStatus != null">
+            where p.status = #{projectStatus}
+        </if>
+        group by p.teacher;
+    </select>
+
+    <select id="selectTeachers" resultMap="teacherResultMap">
+        <include refid="selectTeacher"></include>
+        right join project p on p.teacher = u.id
+        <where>
+            <if test="projectStatus != null">
+                t.project_status = #{projectStatus}
+            </if>
+            <if test="name != null">
+                and u.name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="college != null">
+                and t.college = #{college}
+            </if>
+            <if test="major != null">
+                and t.major = #{major}
+            </if>
+        </where>
+        group by p.teacher;
     </select>
 </mapper>

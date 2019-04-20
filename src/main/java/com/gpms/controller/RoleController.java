@@ -1,7 +1,7 @@
 package com.gpms.controller;
 
 import com.gpms.dao.domain.entity.Role;
-import com.gpms.service.impl.RoleServiceImpl;
+import com.gpms.service.ReadService;
 import com.gpms.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,12 +14,12 @@ import java.util.List;
 @RequestMapping("/roles")
 public class RoleController {
     @Autowired
-    RoleServiceImpl roleService;
+    private ReadService readService;
 
     @GetMapping("")
     public Response getRoles() {
         List<Role> roleList;
-        roleList = roleService.getRoles();
+        roleList = readService.getRoles();
         if (roleList == null) return Response.errorMsg("请求角色列表失败！");
         else return Response.ok(roleList);
     }

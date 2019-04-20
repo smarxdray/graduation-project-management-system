@@ -2,11 +2,10 @@ package com.gpms.controller;
 
 import com.gpms.dao.domain.entity.Notice;
 import com.gpms.dao.domain.wrapper.NoticeWrapper;
-import com.gpms.service.NoticeService;
+import com.gpms.service.CreateService;
+import com.gpms.service.ReadService;
 import com.gpms.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,9 @@ import java.util.List;
 @RequestMapping("/notices")
 public class NoticeController {
     @Autowired
-    NoticeService noticeService;
+    private ReadService readService;
+    @Autowired
+    private CreateService createService;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -30,26 +31,26 @@ public class NoticeController {
     public Response getNotices(@PathVariable(required = false) Integer id) {
         // PathVariable: id existing
         if (id != null) {
-            Notice notice = noticeService.getNoticeById(id);
+            Notice notice = readService.getNoticeById(id);
             return notice == null ? Response.errorMsg("获取通知详情失败！")
                     : Response.ok(notice);
         }
         // PathVariable empty
-        List<Notice> notices = noticeService.getNotices();
+        List<Notice> notices = readService.getNotices();
         return notices == null ? Response.errorMsg("获取通知列表失败！")
                 : Response.ok(notices);
     }
 
     @GetMapping("/users/{id}")
     public Response getNoticesByUserId(@PathVariable(name = "id") Integer userId) {
-        List<Notice> notices = noticeService.getNoticesByUserId(userId);
+        List<Notice> notices = readService.getNoticesByUserId(userId);
         return notices == null ? Response.errorMsg("获取通知列表失败！")
                 : Response.ok(notices);
     }
 
     @PostMapping("")
     public Response addNotice(@RequestBody NoticeWrapper noticeWrapper) {
-        int lines = noticeService.addNotice(noticeWrapper.getNotice(), noticeWrapper.getPrivateDetails());
+        int lines = createService.addNotice(noticeWrapper.getNotice(), noticeWrapper.getPrivateDetails());
         if (lines <= 0) return Response.errorMsg("发布失败！");
         else {
             pop(noticeWrapper);
