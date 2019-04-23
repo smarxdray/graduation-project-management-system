@@ -171,6 +171,13 @@ public class ReadServiceImpl implements ReadService {
     }
 
     @Override
+    public List<User> getUsers(Integer role) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(Constant.PARAM_ROLE, role);
+        return userMapper.selectList(queryWrapper);
+    }
+
+    @Override
     public List<User> getStudents() {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(Constant.PARAM_ROLE,  Constant.ROLE_STUDENT);
@@ -210,6 +217,11 @@ public class ReadServiceImpl implements ReadService {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<FileInfo> getFileInfos(Integer role) {
+        return fileMapper.getFileInfosByRole(role);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.gpms.controller;
 
+import com.gpms.dao.domain.FullNotice;
 import com.gpms.dao.domain.entity.Notice;
 import com.gpms.dao.domain.wrapper.NoticeWrapper;
 import com.gpms.service.CreateService;
@@ -10,6 +11,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/notices")
@@ -49,18 +51,18 @@ public class NoticeController {
     }
 
     @PostMapping("")
-    public Response addNotice(@RequestBody NoticeWrapper noticeWrapper) {
-        int lines = createService.addNotice(noticeWrapper.getNotice(), noticeWrapper.getPrivateDetails());
+    public Response addNotice(@RequestBody FullNotice notice) {
+        int lines = createService.addNotice(notice);
         if (lines <= 0) return Response.errorMsg("发布失败！");
         else {
-            pop(noticeWrapper);
+            pop(notice);
             return Response.ok();
         }
     }
 
-    private void pop(NoticeWrapper noticeWrapper) {
+    private void pop(FullNotice notice) {
 
-        this.messagingTemplate.convertAndSend("/broadcast/notices", noticeWrapper.getNotice());
+        this.messagingTemplate.convertAndSend("/broadcast/notices", notice.getBasic());
 
     }
 }

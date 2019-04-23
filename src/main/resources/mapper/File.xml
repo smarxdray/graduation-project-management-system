@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gpms.dao.mapper.FileMapper">
+
+    <select id="getFileInfosByRole" resultType="com.gpms.dao.domain.entity.FileInfo">
+        select f.*
+        from file f
+        left join user u on u.id = f.owner
+        <if test="role != null">
+            where u.role = #{role};
+        </if>
+    </select>
+</mapper>

@@ -56,6 +56,9 @@ public class UserController {
                 case Constant.ALL:
                     userList = readService.getUsers();
                     break;
+                case Constant.ADMIN:
+                    userList = readService.getUsers(Constant.ROLE_ADMIN);
+                    break;
                 case Constant.TEACHER:
                     userList = readService.getTeachers();
                     break;

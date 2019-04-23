@@ -1,6 +1,7 @@
 package com.gpms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.gpms.dao.domain.FullNotice;
 import com.gpms.dao.domain.entity.*;
 import com.gpms.dao.mapper.*;
 import com.gpms.exception.FileException;
@@ -110,17 +111,14 @@ public class CreateServiceImpl implements CreateService {
 
     @Override
     @Transactional
-    public int addNotice(Notice notice, List<PrivateNotice> privateNotices) {
-        int lines = noticeMapper.insert(notice);
+    public int addNotice(FullNotice notice) {
+        int lines = noticeMapper.insert(notice.getBasic());
         if (lines > 0) {
-            if (privateNotices != null) {
-                int ln = 0;
-                for (PrivateNotice p : privateNotices) {
-                    p.setOwner(notice.getId());
-                    ln += privateNoticeMapper.insert(p);
-                }
-                return ln == privateNotices.size() ? lines : -1;
-            } else return -1;
+            if (notice.getDetail() != null) {
+                PrivateNotice p = notice.getDetail();
+                p.setOwner(notice.getBasic().getId());
+                return privateNoticeMapper.insert(notice.getDetail());
+            } else return lines;
         } else return lines;
     }
 

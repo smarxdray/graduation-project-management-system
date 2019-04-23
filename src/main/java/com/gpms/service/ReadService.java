@@ -38,5 +38,7 @@ public interface ReadService {
     List<User> getUsers();
     List<User> getStudents();
     List<User> getTeachers();
+    List<User> getUsers(Integer role);
     byte[] read(FileInfo fileInfo) throws FileException;
+    List<FileInfo> getFileInfos(Integer role);
 }

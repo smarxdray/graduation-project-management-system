@@ -4,6 +4,7 @@ import com.gpms.dao.domain.entity.FileInfo;
 import com.gpms.exception.FileException;
 import com.gpms.service.CreateService;
 import com.gpms.service.ReadService;
+import com.gpms.utils.Constant;
 import com.gpms.utils.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/files")
@@ -44,6 +46,14 @@ public class FileController {
         FileInfo fileInfo = readService.getFileInfoById(id);
         return fileInfo == null ? Response.errorMsg("获取文件列表失败！")
                 : Response.ok(fileInfo);
+    }
+
+    @ResponseBody
+    @PostMapping()
+    public Response getFileInfos(@RequestBody Map<String, Object> query) {
+        List<FileInfo> fileInfos = readService.getFileInfos(Constant.ROLE_TEACHER);
+        return fileInfos == null ? Response.errorMsg("失败！")
+                : Response.ok(fileInfos);
     }
 
     @ResponseBody
