@@ -27,28 +27,26 @@ public class NoticeController {
 //        return Response.ok("Hello," + greeting + "!");
 //    }
 
-    @GetMapping({"", "/{id}"})
-    public Response getNotices(@PathVariable(required = false) Integer id) {
-        // PathVariable: id existing
-        if (id != null) {
+    @GetMapping()
+    public Response getNotices(@RequestParam(name = "receiver", required = false) Integer receiver) {
+        List<Notice> notices;
+        if (receiver != null) {
+            notices = readService.getNoticesByReceiver(receiver);
+        } else {
+            notices = readService.getNotices();
+        }
+        return notices == null ? Response.errorMsg("获取通知列表失败！")
+                : Response.ok(notices);
+    }
+
+    @GetMapping("/{id}")
+    public Response getNoticeById(@PathVariable(required = false) Integer id) {
             Notice notice = readService.getNoticeById(id);
             return notice == null ? Response.errorMsg("获取通知详情失败！")
                     : Response.ok(notice);
-        }
-        // PathVariable empty
-        List<Notice> notices = readService.getNotices();
-        return notices == null ? Response.errorMsg("获取通知列表失败！")
-                : Response.ok(notices);
     }
 
-    @GetMapping("/users/{id}")
-    public Response getNoticesByUserId(@PathVariable(name = "id") Integer userId) {
-        List<Notice> notices = readService.getNoticesByUserId(userId);
-        return notices == null ? Response.errorMsg("获取通知列表失败！")
-                : Response.ok(notices);
-    }
-
-    @PostMapping("")
+    @PostMapping()
     public Response addNotice(@RequestBody NoticeWrapper noticeWrapper) {
         int lines = createService.addNotice(noticeWrapper.getNotice(), noticeWrapper.getPrivateDetails());
         if (lines <= 0) return Response.errorMsg("发布失败！");

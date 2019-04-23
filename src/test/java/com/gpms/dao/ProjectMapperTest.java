@@ -14,7 +14,7 @@ public class ProjectMapperTest extends BaseTest {
 
     @Test
     public void select() {
-        List<Map<String, Object>> maps = projectMapper.selectFullProjects();
+        List<Map<String, Object>> maps = projectMapper.selectProjects();
         System.out.println(maps.size());
         System.out.println(maps.get(0).get("createTime"));
     }

@@ -3,7 +3,7 @@
 
 <mapper namespace="com.gpms.dao.mapper.ProjectMapper">
 
-        <select id="selectFullProjects" resultType="java.util.Map">
+        <select id="selectProjects" resultType="java.util.Map">
             select p.id,
                    p.title,
                    p.content,

@@ -10,5 +10,5 @@ import java.util.Map;
 
 @Component
 public interface ProjectMapper extends BaseMapper<Project> {
-    List<Map<String, Object>> selectFullProjects();
+    List<Map<String, Object>> selectProjects();
 }

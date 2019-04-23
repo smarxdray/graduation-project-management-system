@@ -3,7 +3,7 @@
 
 <mapper namespace="com.gpms.dao.mapper.NoticeMapper">
 
-    <select id="getNoticesByUserId" resultType="com.gpms.dao.domain.entity.Notice">
+    <select id="getNoticesByReceiver" resultType="com.gpms.dao.domain.entity.Notice">
         select n.*
         from notice n
         left join private_notice p on p.owner = n.id

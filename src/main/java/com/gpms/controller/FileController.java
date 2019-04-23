@@ -46,20 +46,7 @@ public class FileController {
                 : Response.ok(fileInfo);
     }
 
-    @ResponseBody
-    @PostMapping("/upload")
-    public Response handleFileUpload(HttpServletRequest request) {
-        List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
-        Integer userId = Integer.valueOf(request.getParameter("id"));
-        try {
-            int lines = createService.batch(files, userId);
-            return lines <= 0 ? Response.errorMsg("上传失败！") : Response.ok();
-        } catch (FileException e) {
-            return Response.errorMsg(e.getMsg());
-        }
-    }
-
-    @GetMapping("/download/{id}")
+    @GetMapping("/{id}/download")
     public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Integer id) throws Exception{
         FileInfo fileInfo = readService.getFileInfoById(id);
         if (fileInfo == null) return new ResponseEntity<>(null, null, HttpStatus.BAD_REQUEST);
@@ -68,5 +55,18 @@ public class FileController {
         filename= URLEncoder.encode(filename, "utf-8");
         headers.add("Content-Disposition", "attachment;filename="+filename);
         return new ResponseEntity<>(readService.read(fileInfo), headers, HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @PostMapping("/upload")
+    public Response handleFileUpload(HttpServletRequest request) {
+        List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+        Integer userId = Integer.valueOf(request.getParameter("id"));
+        try {
+            int lines = createService.write(files, userId);
+            return lines <= 0 ? Response.errorMsg("上传失败！") : Response.ok();
+        } catch (FileException e) {
+            return Response.errorMsg(e.getMsg());
+        }
     }
 }

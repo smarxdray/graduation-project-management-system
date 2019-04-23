@@ -14,7 +14,7 @@ public class NoticeMapperTest extends BaseTest {
 
     @Test
     public void getNoticesByUserId() {
-        List<Notice> notices = noticeMapper.getNoticesByUserId(22);
+        List<Notice> notices = noticeMapper.getNoticesByReceiver(22);
         System.out.println(notices.size());
     }
 }

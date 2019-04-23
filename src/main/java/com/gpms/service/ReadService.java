@@ -9,23 +9,24 @@ import java.util.List;
 import java.util.Map;
 
 public interface ReadService {
-    List<Map<String, Object>> getFullProjects();
+    List<Map<String, Object>> getReadableProjects();
     List<FileInfo> getFileInfos();
-    List<FileInfo> getFileInfosByOwner(Integer ownerId);
-    FileInfo getFileInfoById(Integer id);List<College> getColleges();
+    List<FileInfo> getFileInfosByOwner(Integer owner);
+    FileInfo getFileInfoById(Integer id);
+    List<College> getColleges();
     List<Major> getMajors();
-    List<Major> getMajorsByCollege(Integer collegeId);
+    List<Major> getMajorsByCollege(Integer college);
     List<Notice> getNotices();
     Notice getNoticeById(Integer id);
-    List<Notice> getNoticesByUserId(Integer userId);
+    List<Notice> getNoticesByReceiver(Integer receiver);
     List<Project> getProjects();
     Project getProjectsById(Integer id);
     List<Role> getRoles();
 
     List<Student> getStudentsAllottedOrNot(boolean allotted);
-    List<Student> getStudentsByTeacher(Integer teacherId);
+    List<Student> getStudentsByTeacher(Integer teacher);
     List getStudentDetailsByTeacher(Integer teacherId);
-    List<Teacher> getTeachersByMajor(Integer majorId);
+    List<Teacher> getTeachersByMajor(Integer major);
     List<Teacher> getTeachers(String name, Integer college, Integer major, Integer projectStatus);
     TeacherDetail getTeacherDetailByOwner(Integer owner);
     List<Project> getProjectsByTeacher(Integer id);

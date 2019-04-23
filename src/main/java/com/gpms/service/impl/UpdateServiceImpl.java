@@ -11,6 +11,7 @@ import com.gpms.dao.mapper.StudentMapper;
 import com.gpms.dao.mapper.TeacherMapper;
 import com.gpms.dao.mapper.UserMapper;
 import com.gpms.service.UpdateService;
+import com.gpms.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,7 +67,21 @@ public class UpdateServiceImpl implements UpdateService {
         UpdateWrapper<Project> wp = new UpdateWrapper<>();
         wp.eq("id", project);
         wp.set("student", student);
-        wp.set("status", 111);
+        wp.set("status", Constant.PROJECT_STATUS_CLAIMED);
+        lines += projectMapper.update(new Project(), wp);
+        return lines == 2;
+    }
+
+    @Override
+    public boolean unselectProject(Integer student, Integer project) {
+        UpdateWrapper<StudentDetail> ws = new UpdateWrapper<>();
+        ws.eq("owner", student);
+        ws.set("project", null);
+        int lines = studentMapper.update(new StudentDetail(), ws);
+        UpdateWrapper<Project> wp = new UpdateWrapper<>();
+        wp.eq("id", project);
+        wp.set("student", null);
+        wp.set("status", Constant.PROJECT_STATUS_UNCLAIMED);
         lines += projectMapper.update(new Project(), wp);
         return lines == 2;
     }

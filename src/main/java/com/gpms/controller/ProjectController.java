@@ -25,9 +25,21 @@ public class ProjectController {
     ProjectMapper projectMapper;
 
     @GetMapping({"", "/{id}"})
-    public Response getProjectsByTeacher(@PathVariable(name = "id", required = false) Integer id,
-                                         @RequestParam(name = "teacher", required = false) Integer teacherId) {
-        if (teacherId != null) {
+    public Response getProjects(@PathVariable(name = "id", required = false) Integer id,
+                                @RequestParam(name = "readable", required = false) Boolean readable,
+                                @RequestParam(name = "teacher", required = false) Integer teacherId,
+                                @RequestParam(name = "status", required = false) Integer status) {
+        if (readable != null) {
+            if (readable) {
+                List<Map<String, Object>> fullProjects = readService.getReadableProjects();
+                return fullProjects == null ? Response.errorMsg("获取课题信息失败！")
+                        : Response.ok(fullProjects);
+            } else {
+                List<Project> projects = readService.getProjects();
+                return projects == null ? Response.errorMsg("获取课题列表失败！")
+                        : Response.ok(projects);
+            }
+        } else if (teacherId != null) {
             List<Project> projects = readService.getProjectsByTeacher(teacherId);
             return projects == null ? Response.errorMsg("获取课题列表失败！")
                     : Response.ok(projects);
@@ -42,13 +54,6 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/details")
-    public Response getFullProjects() {
-        List<Map<String, Object>> fullProjects = readService.getFullProjects();
-        return fullProjects == null ? Response.errorMsg("获取课题信息失败！")
-                : Response.ok(fullProjects);
-    }
-
     @PostMapping()
     public Response addProjects(@RequestBody List<Project> projects) {
         return createService.addProjects(projects) <=0 ? Response.errorMsg("提交课题失败！")
@@ -61,17 +66,14 @@ public class ProjectController {
             int lines = updateService.updateProjects(project);
             return Response.ok(lines);
         }
-        return null;
+        return Response.errorMsg("不可接受的请求！");
     }
 
     @DeleteMapping("/{id}")
     public Response deleteProject(@PathVariable("id") Integer id) {
-        if (id != null) {
-            int lines = projectMapper.deleteById(id);
-            System.out.println(lines);
-            return lines <= 0 ? Response.errorMsg("删除失败！")
-                    : Response.ok();
-        }
-        return Response.errorMsg("不可接受的请求！");
+        int lines = projectMapper.deleteById(id);
+        System.out.println(lines);
+        return lines <= 0 ? Response.errorMsg("删除失败！")
+                : Response.ok();
     }
 }

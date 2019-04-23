@@ -38,8 +38,8 @@ public class ReadServiceImpl implements ReadService {
 
 
     @Override
-    public List<Map<String, Object>> getFullProjects() {
-        return projectMapper.selectFullProjects();
+    public List<Map<String, Object>> getReadableProjects() {
+        return projectMapper.selectProjects();
     }
     @Override
     public List<FileInfo> getFileInfos() {
@@ -187,8 +187,8 @@ public class ReadServiceImpl implements ReadService {
     }
 
     @Override
-    public List<Notice> getNoticesByUserId(Integer userId) {
-        return noticeMapper.getNoticesByUserId(userId);
+    public List<Notice> getNoticesByReceiver(Integer userId) {
+        return noticeMapper.getNoticesByReceiver(userId);
     }
     @Override
     public byte[] read(FileInfo fileInfo) throws FileException {

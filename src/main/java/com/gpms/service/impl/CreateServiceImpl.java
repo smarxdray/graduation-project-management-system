@@ -39,7 +39,7 @@ public class CreateServiceImpl implements CreateService {
 
     @Override
     @Transactional
-    public int batch(List<MultipartFile> files, Integer userId) throws FileException {
+    public int write(List<MultipartFile> files, Integer userId) throws FileException {
         int lines = 0;
         String personalDir = String.valueOf(userId);
         String path = Constant.FILE_DIR + File.separator + personalDir;
@@ -130,7 +130,7 @@ public class CreateServiceImpl implements CreateService {
     }
 
     @Override
-    public int insertTeacherDetail(TeacherDetail detail) {
+    public int addTeacherDetail(TeacherDetail detail) {
         return teacherMapper.insert(detail);
     }
     @Override
