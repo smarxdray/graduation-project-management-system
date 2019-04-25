@@ -1,5 +1,6 @@
 package com.gpms.controller;
 
+import com.gpms.dao.domain.dto.ProjectDTO;
 import com.gpms.dao.domain.entity.Project;
 import com.gpms.dao.mapper.ProjectMapper;
 import com.gpms.service.CreateService;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/projects")
@@ -26,29 +26,14 @@ public class ProjectController {
 
     @GetMapping({"", "/{id}"})
     public Response getProjects(@PathVariable(name = "id", required = false) Integer id,
-                                @RequestParam(name = "readable", required = false) Boolean readable,
                                 @RequestParam(name = "teacher", required = false) Integer teacherId,
                                 @RequestParam(name = "status", required = false) Integer status) {
-        if (readable != null) {
-            if (readable) {
-                List<Map<String, Object>> fullProjects = readService.getReadableProjects();
-                return fullProjects == null ? Response.errorMsg("获取课题信息失败！")
-                        : Response.ok(fullProjects);
-            } else {
-                List<Project> projects = readService.getProjects();
-                return projects == null ? Response.errorMsg("获取课题列表失败！")
-                        : Response.ok(projects);
-            }
-        } else if (teacherId != null) {
-            List<Project> projects = readService.getProjectsByTeacher(teacherId);
-            return projects == null ? Response.errorMsg("获取课题列表失败！")
-                    : Response.ok(projects);
-        } else if (id != null) {
-            Project project = readService.getProjectsById(id);
-            return project == null ? Response.errorMsg("获取课题失败！")
-                    : Response.ok(project);
+        if (id != null) {
+            ProjectDTO projectDTO = readService.getProject(id);
+            return projectDTO == null ? Response.errorMsg("获取课题失败！")
+                    : Response.ok(projectDTO);
         } else {
-            List<Project> projects = readService.getProjects();
+            List<ProjectDTO> projects = readService.getProjects(status, teacherId);
             return projects == null ? Response.errorMsg("获取课题列表失败！")
                     : Response.ok(projects);
         }

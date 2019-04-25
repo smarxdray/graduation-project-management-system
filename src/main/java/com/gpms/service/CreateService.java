@@ -14,4 +14,5 @@ public interface CreateService {
     int addTeacherDetail(TeacherDetail detail);
     int addProjects(List<Project> projects);
     int addUser(User user);
+    int addComment(Comment comment);
 }

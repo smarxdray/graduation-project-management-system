@@ -12,7 +12,8 @@ public interface UpdateService {
     boolean selectProject(Integer student, Integer project);
     boolean unselectProject(Integer student, Integer project);
     int updateProjects(Project template);
-    int updateStudentDetailById(StudentDetail detail);
+    int updateStudentDetailByOwner(StudentDetail detail);
     int updateTeacherDetailByOwner(TeacherDetail detail);
     int updateUser(User user);
+    int setReviewTimes(Integer owner);
 }

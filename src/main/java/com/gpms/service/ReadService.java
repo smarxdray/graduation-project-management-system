@@ -2,14 +2,17 @@ package com.gpms.service;
 
 import com.gpms.dao.domain.Student;
 import com.gpms.dao.domain.Teacher;
+import com.gpms.dao.domain.dto.ProjectDTO;
 import com.gpms.dao.domain.entity.*;
 import com.gpms.exception.FileException;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ReadService {
-    List<Map<String, Object>> getReadableProjects();
+    Comment getComment(Integer id);
+    List<Comment> getComments(Integer author, Integer target);
+    ProjectDTO getProject(Integer id);
+    List<ProjectDTO> getProjects(Integer status, Integer teacher);
     List<FileInfo> getFileInfos();
     List<FileInfo> getFileInfosByOwner(Integer owner);
     FileInfo getFileInfoById(Integer id);
@@ -19,7 +22,6 @@ public interface ReadService {
     List<Notice> getNotices();
     Notice getNoticeById(Integer id);
     List<Notice> getNoticesByReceiver(Integer receiver);
-    List<Project> getProjects();
     Project getProjectsById(Integer id);
     List<Role> getRoles();
 

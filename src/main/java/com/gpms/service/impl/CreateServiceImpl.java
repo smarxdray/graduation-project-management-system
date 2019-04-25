@@ -33,6 +33,8 @@ public class CreateServiceImpl implements CreateService {
     private NoticeMapper noticeMapper;
     @Autowired
     private PrivateNoticeMapper privateNoticeMapper;
+    @Autowired
+    private CommentMapper commentMapper;
 
     @Autowired
     private ReadService readService;
@@ -157,5 +159,19 @@ public class CreateServiceImpl implements CreateService {
     @Override
     public int addUser(User user) {
         return userMapper.insert(user);
+    }
+
+    @Override
+    public int addComment(Comment comment) {
+
+        int userId = comment.getTarget();
+        if (userMapper.selectById(userId).getRole() == Constant.ROLE_STUDENT) {
+            UpdateWrapper<StudentDetail> wrapper = new UpdateWrapper<>();
+            wrapper.eq("owner", userId);
+            int mark = comment.getMark();
+            wrapper.set("status", mark < 60 ?
+            Constant.STUDENT_STATUS_DISQUALIFIED : Constant.STUDENT_STATUS_QUALIFIED);
+        }
+        return commentMapper.insert(comment);
     }
 }

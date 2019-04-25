@@ -5,21 +5,21 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.gpms.annotation.UserLoginToken;
 import com.gpms.dao.domain.Student;
 import com.gpms.dao.domain.Teacher;
-import com.gpms.dao.domain.entity.*;
-import com.gpms.service.*;
-import com.gpms.utils.Constant;
+import com.gpms.dao.domain.entity.Role;
+import com.gpms.dao.domain.entity.StudentDetail;
+import com.gpms.dao.domain.entity.TeacherDetail;
+import com.gpms.dao.domain.entity.User;
+import com.gpms.service.CreateService;
+import com.gpms.service.DeleteService;
+import com.gpms.service.ReadService;
+import com.gpms.service.UpdateService;
 import com.gpms.utils.Response;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")

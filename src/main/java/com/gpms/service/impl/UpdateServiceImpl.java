@@ -35,6 +35,7 @@ public class UpdateServiceImpl implements UpdateService {
         int lines = 0;
         if (assigned != null && assigned.size() != 0) {
             for (StudentDetail detail: assigned) {
+                detail.setStatus(Constant.STUDENT_STATUS_IDLE);
                 int ln = studentMapper.updateById(detail);
                 if (ln <= 0) studentMapper.insert(detail);
                 lines++;
@@ -52,6 +53,7 @@ public class UpdateServiceImpl implements UpdateService {
                 UpdateWrapper<StudentDetail> w = new UpdateWrapper<>();
                 w.eq("id", detail.getId());
                 w.set("teacher", null);
+                w.set("status", Constant.STUDENT_STATUS_UNASSIGNED);
                 studentMapper.update(detail, w);
             }
         }
@@ -63,6 +65,7 @@ public class UpdateServiceImpl implements UpdateService {
         UpdateWrapper<StudentDetail> ws = new UpdateWrapper<>();
         ws.eq("owner", student);
         ws.set("project", project);
+        ws.set("status", Constant.STUDENT_STATUS_WORKING);
         int lines = studentMapper.update(new StudentDetail(), ws);
         UpdateWrapper<Project> wp = new UpdateWrapper<>();
         wp.eq("id", project);
@@ -77,6 +80,7 @@ public class UpdateServiceImpl implements UpdateService {
         UpdateWrapper<StudentDetail> ws = new UpdateWrapper<>();
         ws.eq("owner", student);
         ws.set("project", null);
+        ws.set("status", Constant.STUDENT_STATUS_IDLE);
         int lines = studentMapper.update(new StudentDetail(), ws);
         UpdateWrapper<Project> wp = new UpdateWrapper<>();
         wp.eq("id", project);
@@ -102,9 +106,9 @@ public class UpdateServiceImpl implements UpdateService {
     }
 
     @Override
-    public int updateStudentDetailById(StudentDetail detail) {
+    public int updateStudentDetailByOwner(StudentDetail detail) {
         UpdateWrapper<StudentDetail> wrapper = new UpdateWrapper<>();
-        wrapper.set("teacher", null);
+        wrapper.eq("owner", detail.getOwner());
         return studentMapper.update(detail, wrapper);
     }
 
@@ -118,5 +122,24 @@ public class UpdateServiceImpl implements UpdateService {
     @Override
     public int updateUser(User user) {
         return userMapper.updateById(user);
+    }
+
+    @Override
+    @Transactional
+    public int setReviewTimes(Integer owner) {
+        int lines = 0;
+        User user = userMapper.selectById(owner);
+        switch (user.getRole()) {
+            case Constant.ROLE_STUDENT:
+                QueryWrapper<StudentDetail> wrapper = new QueryWrapper<>();
+                wrapper.eq("owner", owner);
+                StudentDetail studentDetail = studentMapper.selectOne(wrapper);
+                int reviewTimes = studentDetail.getReviewTimes() + 1;
+                studentDetail.setReviewTimes(reviewTimes);
+                studentDetail.setOwner(owner);
+                lines = updateStudentDetailByOwner(studentDetail);
+                break;
+        }
+        return lines;
     }
 }

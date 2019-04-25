@@ -27,6 +27,12 @@ public class Constant {
     public static final int PROJECT_STATUS_UNCLAIMED = 110;
     public static final int PROJECT_STATUS_CLAIMED = 111;
 
+    public static final int STUDENT_STATUS_UNASSIGNED = 0;
+    public static final int STUDENT_STATUS_IDLE = 10;
+    public static final int STUDENT_STATUS_WORKING = 11;
+    public static final int STUDENT_STATUS_QUALIFIED = 110;
+    public static final int STUDENT_STATUS_DISQUALIFIED = 111;
+
     public static final String FILE_DIR = "S:" + File.separator + "ray" + File.separator + "Desktop" + File.separator + "gpms";
 
     //webSocket相关配置
