@@ -3,6 +3,7 @@ package com.gpms.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gpms.dao.domain.Student;
 import com.gpms.dao.domain.Teacher;
+import com.gpms.dao.domain.dto.ProjectDTO;
 import com.gpms.dao.domain.entity.*;
 import com.gpms.dao.mapper.*;
 import com.gpms.exception.FileException;
@@ -35,11 +36,31 @@ public class ReadServiceImpl implements ReadService {
     private TeacherMapper teacherMapper;
     @Autowired
     private StudentMapper studentMapper;
+    @Autowired
+    private CommentMapper commentMapper;
 
 
     @Override
-    public List<Map<String, Object>> getFullProjects() {
-        return projectMapper.selectFullProjects();
+    public Comment getComment(Integer id) {
+        return commentMapper.selectById(id);
+    }
+
+    @Override
+    public List<Comment> getComments(Integer author, Integer target) {
+        QueryWrapper<Comment> wrapper = new QueryWrapper<>();
+        if (author != null) wrapper.eq("author", author);
+        if (target != null) wrapper.eq("target", target);
+        return commentMapper.selectList(wrapper);
+    }
+
+    @Override
+    public ProjectDTO getProject(Integer id) {
+        return projectMapper.selectProject(id);
+    }
+
+    @Override
+    public List<ProjectDTO> getProjects(Integer status, Integer teacher) {
+        return projectMapper.selectProjects(status, teacher);
     }
     @Override
     public List<FileInfo> getFileInfos() {
@@ -73,11 +94,6 @@ public class ReadServiceImpl implements ReadService {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("college", collegeId);
         return majorMapper.selectList(wrapper);
-    }
-
-    @Override
-    public List<Project> getProjects() {
-        return projectMapper.selectList(null);
     }
 
     @Override
@@ -171,6 +187,13 @@ public class ReadServiceImpl implements ReadService {
     }
 
     @Override
+    public List<User> getUsers(Integer role) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(Constant.PARAM_ROLE, role);
+        return userMapper.selectList(queryWrapper);
+    }
+
+    @Override
     public List<User> getStudents() {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(Constant.PARAM_ROLE,  Constant.ROLE_STUDENT);
@@ -187,8 +210,8 @@ public class ReadServiceImpl implements ReadService {
     }
 
     @Override
-    public List<Notice> getNoticesByUserId(Integer userId) {
-        return noticeMapper.getNoticesByUserId(userId);
+    public List<Notice> getNoticesByReceiver(Integer userId) {
+        return noticeMapper.getNoticesByReceiver(userId);
     }
     @Override
     public byte[] read(FileInfo fileInfo) throws FileException {
@@ -210,6 +233,11 @@ public class ReadServiceImpl implements ReadService {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<FileInfo> getFileInfos(Integer role) {
+        return fileMapper.getFileInfosByRole(role);
     }
 
 }

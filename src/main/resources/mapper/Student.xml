@@ -20,12 +20,14 @@
             <result property="updateTime" column="update_time"/>
             <result property="createTime" column="create_time"/>
         </association>
-        <association property="detail" javaType="com.gpms.dao.domain.entity.StudentDetail">
+        <association property="detail" javaType="com.gpms.dao.domain.dto.StudentDetailDTO">
             <result property="id" column="s_id"/>
             <result property="owner" column="owner"/>
             <result property="teacher" column="teacher"/>
+            <result property="teacherName" column="teacher_name"/>
             <result property="status" column="s_status"/>
             <result property="project" column="project"/>
+            <result property="projectTitle" column="project_title"/>
             <result property="fileDir" column="file_uri"/>
             <result property="reviewTimes" column="review_times"/>
             <result property="college" column="college"/>
@@ -43,10 +45,14 @@
                 s.*,
                 s.id s_id,
                 s.status s_status,
+                ut.name teacher_name,
+                p.title project_title,
                 s.update_time s_update_time,
                 s.create_time s_create_time
         from (select * from user where user.role = 5) as u
         left join student s on s.owner = u.id
+        left join user ut on s.teacher = ut.id
+        left join project p on s.project = p.id
     </sql>
 
     <select id="selectStudentsByTeacher" resultMap="studentResultMap">

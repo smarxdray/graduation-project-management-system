@@ -11,7 +11,7 @@ public class DeleteServiceImpl implements DeleteService {
     private UserMapper userMapper;
 
     @Override
-    public int deleteUserById(Integer id) {
+    public int deleteUser(Integer id) {
         return userMapper.deleteById(id);
     }
 }

@@ -62,7 +62,6 @@
 
     <select id="selectTeachers" resultMap="teacherResultMap">
         <include refid="selectTeacher"></include>
-        right join project p on p.teacher = u.id
         <where>
             <if test="projectStatus != null">
                 t.project_status = #{projectStatus}
@@ -77,6 +76,5 @@
                 and t.major = #{major}
             </if>
         </where>
-        group by p.teacher;
     </select>
 </mapper>

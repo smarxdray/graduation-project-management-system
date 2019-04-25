@@ -33,13 +33,15 @@ public class CreateServiceImpl implements CreateService {
     private NoticeMapper noticeMapper;
     @Autowired
     private PrivateNoticeMapper privateNoticeMapper;
+    @Autowired
+    private CommentMapper commentMapper;
 
     @Autowired
     private ReadService readService;
 
     @Override
     @Transactional
-    public int batch(List<MultipartFile> files, Integer userId) throws FileException {
+    public int write(List<MultipartFile> files, Integer userId) throws FileException {
         int lines = 0;
         String personalDir = String.valueOf(userId);
         String path = Constant.FILE_DIR + File.separator + personalDir;
@@ -64,6 +66,23 @@ public class CreateServiceImpl implements CreateService {
             fileInfo.setSize(size);
             fileInfo.setOwner(userId);
             lines += fileMapper.insert(fileInfo);
+        }
+        return lines;
+    }
+
+    @Override
+    @Transactional
+    public int addNotice(Notice notice, List<PrivateNotice> privateNotices) {
+        int lines = noticeMapper.insert(notice);
+        if (lines > 0) {
+            if (privateNotices != null) {
+                int ln = 0;
+                for (PrivateNotice p : privateNotices) {
+                    p.setOwner(notice.getId());
+                    ln += privateNoticeMapper.insert(p);
+                }
+                return ln != privateNotices.size() ? -1 : lines;
+            }
         }
         return lines;
     }
@@ -109,28 +128,12 @@ public class CreateServiceImpl implements CreateService {
     }
 
     @Override
-    @Transactional
-    public int addNotice(Notice notice, List<PrivateNotice> privateNotices) {
-        int lines = noticeMapper.insert(notice);
-        if (lines > 0) {
-            if (privateNotices != null) {
-                int ln = 0;
-                for (PrivateNotice p : privateNotices) {
-                    p.setOwner(notice.getId());
-                    ln += privateNoticeMapper.insert(p);
-                }
-                return ln == privateNotices.size() ? lines : -1;
-            } else return -1;
-        } else return lines;
-    }
-
-    @Override
     public int addStudentDetail(StudentDetail detail) {
         return studentMapper.insert(detail);
     }
 
     @Override
-    public int insertTeacherDetail(TeacherDetail detail) {
+    public int addTeacherDetail(TeacherDetail detail) {
         return teacherMapper.insert(detail);
     }
     @Override
@@ -157,5 +160,19 @@ public class CreateServiceImpl implements CreateService {
     @Override
     public int addUser(User user) {
         return userMapper.insert(user);
+    }
+
+    @Override
+    public int addComment(Comment comment) {
+
+        int userId = comment.getTarget();
+        if (userMapper.selectById(userId).getRole() == Constant.ROLE_STUDENT) {
+            UpdateWrapper<StudentDetail> wrapper = new UpdateWrapper<>();
+            wrapper.eq("owner", userId);
+            int mark = comment.getMark();
+            wrapper.set("status", mark < 60 ?
+            Constant.STUDENT_STATUS_DISQUALIFIED : Constant.STUDENT_STATUS_QUALIFIED);
+        }
+        return commentMapper.insert(comment);
     }
 }
