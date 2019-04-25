@@ -225,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `comment`(
 	`content_short` VARCHAR(64)
 		COMMENT '摘要',
 	`content` LONGTEXT,
-	`type` INT UNSIGNED NOT NULL
+	`type` INT UNSIGNED DEFAULT 3
 		COMMENT '0：对程序（feedback）
     			 1：对评论（reply）
     			 2：对通知

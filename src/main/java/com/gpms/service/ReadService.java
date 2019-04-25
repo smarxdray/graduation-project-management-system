@@ -2,30 +2,33 @@ package com.gpms.service;
 
 import com.gpms.dao.domain.Student;
 import com.gpms.dao.domain.Teacher;
+import com.gpms.dao.domain.dto.ProjectDTO;
 import com.gpms.dao.domain.entity.*;
 import com.gpms.exception.FileException;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ReadService {
-    List<Map<String, Object>> getFullProjects();
+    Comment getComment(Integer id);
+    List<Comment> getComments(Integer author, Integer target);
+    ProjectDTO getProject(Integer id);
+    List<ProjectDTO> getProjects(Integer status, Integer teacher);
     List<FileInfo> getFileInfos();
-    List<FileInfo> getFileInfosByOwner(Integer ownerId);
-    FileInfo getFileInfoById(Integer id);List<College> getColleges();
+    List<FileInfo> getFileInfosByOwner(Integer owner);
+    FileInfo getFileInfoById(Integer id);
+    List<College> getColleges();
     List<Major> getMajors();
-    List<Major> getMajorsByCollege(Integer collegeId);
+    List<Major> getMajorsByCollege(Integer college);
     List<Notice> getNotices();
     Notice getNoticeById(Integer id);
-    List<Notice> getNoticesByUserId(Integer userId);
-    List<Project> getProjects();
+    List<Notice> getNoticesByReceiver(Integer receiver);
     Project getProjectsById(Integer id);
     List<Role> getRoles();
 
     List<Student> getStudentsAllottedOrNot(boolean allotted);
-    List<Student> getStudentsByTeacher(Integer teacherId);
+    List<Student> getStudentsByTeacher(Integer teacher);
     List getStudentDetailsByTeacher(Integer teacherId);
-    List<Teacher> getTeachersByMajor(Integer majorId);
+    List<Teacher> getTeachersByMajor(Integer major);
     List<Teacher> getTeachers(String name, Integer college, Integer major, Integer projectStatus);
     TeacherDetail getTeacherDetailByOwner(Integer owner);
     List<Project> getProjectsByTeacher(Integer id);

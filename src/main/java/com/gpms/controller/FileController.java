@@ -4,6 +4,7 @@ import com.gpms.dao.domain.entity.FileInfo;
 import com.gpms.exception.FileException;
 import com.gpms.service.CreateService;
 import com.gpms.service.ReadService;
+import com.gpms.service.UpdateService;
 import com.gpms.utils.Constant;
 import com.gpms.utils.Response;
 import org.slf4j.Logger;
@@ -31,6 +32,8 @@ public class FileController {
     private ReadService readService;
     @Autowired
     private CreateService createService;
+    @Autowired
+    private UpdateService updateService;
 
     @ResponseBody
     @GetMapping()
@@ -48,6 +51,18 @@ public class FileController {
                 : Response.ok(fileInfo);
     }
 
+    @GetMapping("/{id}/download")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Integer id) throws Exception{
+        FileInfo fileInfo = readService.getFileInfoById(id);
+        int lines = updateService.setReviewTimes(fileInfo.getOwner());
+        if (lines <= 0) return new ResponseEntity<>(null, null, HttpStatus.BAD_REQUEST);
+        HttpHeaders headers=new HttpHeaders();
+        String filename = fileInfo.getName() + '.' + fileInfo.getExtension();
+        filename= URLEncoder.encode(filename, "utf-8");
+        headers.add("Content-Disposition", "attachment;filename="+filename);
+        return new ResponseEntity<>(readService.read(fileInfo), headers, HttpStatus.OK);
+    }
+
     @ResponseBody
     @PostMapping()
     public Response getFileInfos(@RequestBody Map<String, Object> query) {
@@ -62,21 +77,10 @@ public class FileController {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         Integer userId = Integer.valueOf(request.getParameter("id"));
         try {
-            int lines = createService.batch(files, userId);
+            int lines = createService.write(files, userId);
             return lines <= 0 ? Response.errorMsg("上传失败！") : Response.ok();
         } catch (FileException e) {
             return Response.errorMsg(e.getMsg());
         }
-    }
-
-    @GetMapping("/download/{id}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Integer id) throws Exception{
-        FileInfo fileInfo = readService.getFileInfoById(id);
-        if (fileInfo == null) return new ResponseEntity<>(null, null, HttpStatus.BAD_REQUEST);
-        HttpHeaders headers=new HttpHeaders();
-        String filename = fileInfo.getName() + '.' + fileInfo.getExtension();
-        filename= URLEncoder.encode(filename, "utf-8");
-        headers.add("Content-Disposition", "attachment;filename="+filename);
-        return new ResponseEntity<>(readService.read(fileInfo), headers, HttpStatus.OK);
     }
 }

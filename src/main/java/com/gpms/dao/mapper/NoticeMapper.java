@@ -9,5 +9,5 @@ import java.util.List;
 
 @Component
 public interface NoticeMapper extends BaseMapper<Notice> {
-    List<Notice> getNoticesByUserId(@Param("userId") Integer userId);
+    List<Notice> getNoticesByReceiver(@Param("userId") Integer userId);
 }

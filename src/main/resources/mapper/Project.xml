@@ -2,24 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.gpms.dao.mapper.ProjectMapper">
+    <sql id="selectProject">
+        select p.*,
+               ur.name reviewerName,
+               ut.name teacherName,
+               us.name studentName,
+               t.college,
+               t.major
+        from project p
+        left join teacher t on t.owner = p.teacher
+        left join user ut on p.teacher = ut.id
+        left join user us on p.student = us.id
+        left join user ur on p.reviewer = ur.id
+    </sql>
 
-        <select id="selectFullProjects" resultType="java.util.Map">
-            select p.id,
-                   p.title,
-                   p.content,
-                   p.status,
-                   p.reviewer,
-                   ur.name reviewerName,
-                   p.teacher,
-                   ut.name teacherName,
-                   t.college,
-                   t.major,
-                   p.student,
-                   p.update_time updateTime,
-                   p.create_time createTime
-            from project p
-            left join teacher t on t.owner = p.teacher
-            left join user ut on p.teacher = ut.id
-            left join user ur on p.reviewer = ur.id;
-        </select>
+    <select id="selectProject" resultType="com.gpms.dao.domain.dto.ProjectDTO">
+        <include refid="selectProject"></include>
+        <where>
+            <if test="id != null">
+                p.id = #{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProjects" resultType="com.gpms.dao.domain.dto.ProjectDTO">
+        <include refid="selectProject"></include>
+        <where>
+            <if test="status != null">
+                p.status = #{status}
+            </if>
+            <if test="teacher != null">
+                and p.teacher = #{teacher}
+            </if>
+        </where>
+    </select>
+
 </mapper>

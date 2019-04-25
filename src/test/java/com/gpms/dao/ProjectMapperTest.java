@@ -1,6 +1,7 @@
 package com.gpms.dao;
 
 import com.gpms.BaseTest;
+import com.gpms.dao.domain.dto.ProjectDTO;
 import com.gpms.dao.mapper.ProjectMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,7 @@ public class ProjectMapperTest extends BaseTest {
 
     @Test
     public void select() {
-        List<Map<String, Object>> maps = projectMapper.selectFullProjects();
+        List<ProjectDTO> maps = projectMapper.selectProjects(null, null);
         System.out.println(maps.size());
-        System.out.println(maps.get(0).get("createTime"));
     }
 }
