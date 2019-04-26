@@ -1,9 +1,9 @@
 package com.gpms.service;
 
-import com.gpms.dao.domain.entity.Project;
-import com.gpms.dao.domain.entity.StudentDetail;
-import com.gpms.dao.domain.entity.TeacherDetail;
-import com.gpms.dao.domain.entity.User;
+import com.gpms.domain.entity.Project;
+import com.gpms.domain.entity.StudentDetail;
+import com.gpms.domain.entity.TeacherDetail;
+import com.gpms.domain.entity.User;
 
 import java.util.List;
 

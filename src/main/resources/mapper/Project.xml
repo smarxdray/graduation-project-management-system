@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.gpms.dao.mapper.ProjectMapper">
+<mapper namespace="com.gpms.dao.ProjectMapper">
     <sql id="selectProject">
         select p.*,
                ur.name reviewerName,
@@ -16,7 +16,7 @@
         left join user ur on p.reviewer = ur.id
     </sql>
 
-    <select id="selectProject" resultType="com.gpms.dao.domain.dto.ProjectDTO">
+    <select id="selectProject" resultType="com.gpms.domain.dto.ProjectDTO">
         <include refid="selectProject"></include>
         <where>
             <if test="id != null">
@@ -25,7 +25,7 @@
         </where>
     </select>
 
-    <select id="selectProjects" resultType="com.gpms.dao.domain.dto.ProjectDTO">
+    <select id="selectProjects" resultType="com.gpms.domain.dto.ProjectDTO">
         <include refid="selectProject"></include>
         <where>
             <if test="status != null">

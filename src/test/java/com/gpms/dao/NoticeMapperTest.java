@@ -1,8 +1,7 @@
 package com.gpms.dao;
 
 import com.gpms.BaseTest;
-import com.gpms.dao.domain.entity.Notice;
-import com.gpms.dao.mapper.NoticeMapper;
+import com.gpms.domain.entity.Notice;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -1,9 +1,9 @@
 package com.gpms.service;
 
-import com.gpms.dao.domain.Student;
-import com.gpms.dao.domain.Teacher;
-import com.gpms.dao.domain.dto.ProjectDTO;
-import com.gpms.dao.domain.entity.*;
+import com.gpms.domain.Student;
+import com.gpms.domain.Teacher;
+import com.gpms.domain.dto.ProjectDTO;
+import com.gpms.domain.entity.*;
 import com.gpms.exception.FileException;
 
 import java.util.List;

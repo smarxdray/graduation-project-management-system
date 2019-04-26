@@ -1,8 +1,7 @@
 package com.gpms.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.gpms.dao.domain.entity.User;
-import com.gpms.dao.mapper.UserMapper;
+import com.gpms.domain.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

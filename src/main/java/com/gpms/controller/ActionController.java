@@ -1,6 +1,6 @@
 package com.gpms.controller;
 
-import com.gpms.dao.domain.entity.StudentDetail;
+import com.gpms.domain.entity.StudentDetail;
 import com.gpms.service.UpdateService;
 import com.gpms.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;

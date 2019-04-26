@@ -1,6 +1,6 @@
 package com.gpms.service;
 
-import com.gpms.dao.domain.entity.*;
+import com.gpms.domain.entity.*;
 import com.gpms.exception.FileException;
 import org.springframework.web.multipart.MultipartFile;
 

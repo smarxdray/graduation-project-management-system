@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.gpms.dao.mapper.StudentMapper">
+<mapper namespace="com.gpms.dao.StudentMapper">
     <resultMap id="studentResultMap" type="Student">
-        <association property="basic" javaType="com.gpms.dao.domain.entity.User">
+        <association property="basic" javaType="com.gpms.domain.entity.User">
             <result property="id" column="id"/>
             <result property="name" column="name"/>
             <result property="gender" column="gender"/>
@@ -20,7 +20,7 @@
             <result property="updateTime" column="update_time"/>
             <result property="createTime" column="create_time"/>
         </association>
-        <association property="detail" javaType="com.gpms.dao.domain.dto.StudentDetailDTO">
+        <association property="detail" javaType="com.gpms.domain.dto.StudentDetailDTO">
             <result property="id" column="s_id"/>
             <result property="owner" column="owner"/>
             <result property="teacher" column="teacher"/>

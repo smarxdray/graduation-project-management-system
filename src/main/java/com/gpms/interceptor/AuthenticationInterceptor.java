@@ -7,7 +7,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.gpms.annotation.PassToken;
 import com.gpms.annotation.UserLoginToken;
-import com.gpms.dao.domain.entity.User;
+import com.gpms.domain.entity.User;
 import com.gpms.service.ReadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.HandlerMethod;

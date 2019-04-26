@@ -1,8 +1,8 @@
 package com.gpms.controller;
 
-import com.gpms.dao.domain.entity.College;
-import com.gpms.dao.domain.entity.Major;
-import com.gpms.dao.domain.entity.Role;
+import com.gpms.domain.entity.College;
+import com.gpms.domain.entity.Major;
+import com.gpms.domain.entity.Role;
 import com.gpms.service.ReadService;
 import com.gpms.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;

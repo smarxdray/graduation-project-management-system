@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.gpms.dao.mapper.NoticeMapper">
+<mapper namespace="com.gpms.dao.NoticeMapper">
 
-    <select id="getNoticesByReceiver" resultType="com.gpms.dao.domain.entity.Notice">
+    <select id="getNoticesByReceiver" resultType="com.gpms.domain.entity.Notice">
         select n.*
         from notice n
         left join private_notice p on p.owner = n.id

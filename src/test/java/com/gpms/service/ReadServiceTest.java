@@ -1,7 +1,7 @@
 package com.gpms.service;
 
 import com.gpms.BaseTest;
-import com.gpms.dao.domain.Teacher;
+import com.gpms.domain.Teacher;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

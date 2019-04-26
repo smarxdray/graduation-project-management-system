@@ -2,8 +2,7 @@ package com.gpms.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gpms.BaseTest;
-import com.gpms.dao.domain.entity.User;
-import com.gpms.dao.mapper.UserMapper;
+import com.gpms.domain.entity.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,7 +11,7 @@ import java.util.List;
 public class UserMapperTest extends BaseTest {
 
     @Autowired
-    private com.gpms.dao.mapper.UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Test
     public void testSelect() {

@@ -1,14 +1,12 @@
 package com.gpms.dao;
 
 import com.gpms.BaseTest;
-import com.gpms.dao.domain.entity.User;
+import com.gpms.domain.entity.User;
 import com.gpms.service.RedisService;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 
 public class RedisTest extends BaseTest {
     @Autowired

@@ -1,6 +1,6 @@
 package com.gpms.controller;
 
-import com.gpms.dao.domain.entity.FileInfo;
+import com.gpms.domain.entity.FileInfo;
 import com.gpms.exception.FileException;
 import com.gpms.service.CreateService;
 import com.gpms.service.ReadService;

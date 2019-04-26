@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace该是StudentMapper的完整限定名-->
-<mapper namespace="com.gpms.dao.mapper.TeacherMapper">
+<mapper namespace="com.gpms.dao.TeacherMapper">
     <!--定义java bean的属性与数据库表的列之间的映射。type="Teacher"用到了application.properties中定义的别名-->
-    <resultMap id="teacherResultMap" type="com.gpms.dao.domain.Teacher">
-        <association property="basic" javaType="com.gpms.dao.domain.entity.User">
+    <resultMap id="teacherResultMap" type="com.gpms.domain.Teacher">
+        <association property="basic" javaType="com.gpms.domain.entity.User">
             <result property="id" column="id"/>
             <result property="name" column="name"/>
             <result property="role" column="role"/>
@@ -22,7 +22,7 @@
             <result property="updateTime" column="update_time"/>
             <result property="createTime" column="create_time"/>
         </association>
-        <association property="detail" javaType="com.gpms.dao.domain.entity.TeacherDetail">
+        <association property="detail" javaType="com.gpms.domain.entity.TeacherDetail">
             <result property="id" column="t_id"/>
             <result property="owner" column="owner"/>
             <result property="title" column="title"/>

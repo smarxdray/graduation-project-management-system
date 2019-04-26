@@ -1,7 +1,7 @@
 package com.gpms.controller;
 
-import com.gpms.dao.domain.entity.Notice;
-import com.gpms.dao.domain.wrapper.NoticeWrapper;
+import com.gpms.domain.entity.Notice;
+import com.gpms.domain.wrapper.NoticeWrapper;
 import com.gpms.service.CreateService;
 import com.gpms.service.ReadService;
 import com.gpms.utils.Response;
@@ -10,7 +10,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/notices")

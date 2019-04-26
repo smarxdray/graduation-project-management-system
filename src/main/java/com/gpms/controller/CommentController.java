@@ -1,6 +1,6 @@
 package com.gpms.controller;
 
-import com.gpms.dao.domain.entity.Comment;
+import com.gpms.domain.entity.Comment;
 import com.gpms.service.CreateService;
 import com.gpms.service.ReadService;
 import com.gpms.utils.Response;

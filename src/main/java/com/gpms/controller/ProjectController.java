@@ -1,8 +1,8 @@
 package com.gpms.controller;
 
-import com.gpms.dao.domain.dto.ProjectDTO;
-import com.gpms.dao.domain.entity.Project;
-import com.gpms.dao.mapper.ProjectMapper;
+import com.gpms.domain.dto.ProjectDTO;
+import com.gpms.domain.entity.Project;
+import com.gpms.dao.ProjectMapper;
 import com.gpms.service.CreateService;
 import com.gpms.service.ReadService;
 import com.gpms.service.UpdateService;

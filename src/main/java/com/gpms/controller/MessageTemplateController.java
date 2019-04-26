@@ -1,6 +1,6 @@
 package com.gpms.controller;
 
-import com.gpms.dao.domain.entity.User;
+import com.gpms.domain.entity.User;
 import com.gpms.service.impl.RedisServiceImpl;
 import com.gpms.utils.Constant;
 import com.gpms.utils.ExpireEnum;

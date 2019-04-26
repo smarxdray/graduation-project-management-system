@@ -1,6 +1,6 @@
 package com.gpms.interceptor;
 
-import com.gpms.dao.domain.entity.User;
+import com.gpms.domain.entity.User;
 import com.gpms.utils.Constant;
 import com.gpms.utils.SpringContextUtils;
 import org.slf4j.Logger;

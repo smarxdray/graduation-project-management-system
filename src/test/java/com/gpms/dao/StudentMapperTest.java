@@ -1,12 +1,8 @@
 package com.gpms.dao;
 
 import com.gpms.BaseTest;
-import com.gpms.dao.domain.Student;
-import com.gpms.dao.mapper.StudentMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 public class StudentMapperTest extends BaseTest {
     @Autowired

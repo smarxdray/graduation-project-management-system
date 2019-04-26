@@ -1,13 +1,11 @@
 package com.gpms.dao;
 
 import com.gpms.BaseTest;
-import com.gpms.dao.domain.dto.ProjectDTO;
-import com.gpms.dao.mapper.ProjectMapper;
+import com.gpms.domain.dto.ProjectDTO;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Map;
 
 public class ProjectMapperTest extends BaseTest {
     @Autowired

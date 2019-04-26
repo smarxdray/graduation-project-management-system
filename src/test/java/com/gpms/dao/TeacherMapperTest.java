@@ -2,24 +2,17 @@ package com.gpms.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gpms.BaseTest;
-import com.gpms.dao.domain.Teacher;
-import com.gpms.dao.domain.entity.User;
-import com.gpms.dao.mapper.TeacherMapper;
-import com.gpms.dao.mapper.UserMapper;
+import com.gpms.domain.Teacher;
+import com.gpms.domain.entity.User;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.validator.PublicClassValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
 public class TeacherMapperTest extends BaseTest {
     @Autowired
-    private com.gpms.dao.mapper.TeacherMapper teacherMapper;
+    private TeacherMapper teacherMapper;
 
     @Ignore
     public void testSelect() {
