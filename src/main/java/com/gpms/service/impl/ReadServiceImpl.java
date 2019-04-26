@@ -6,7 +6,6 @@ import com.gpms.domain.Student;
 import com.gpms.domain.Teacher;
 import com.gpms.domain.dto.ProjectDTO;
 import com.gpms.domain.entity.*;
-import com.gpms.dao.mapper.*;
 import com.gpms.exception.FileException;
 import com.gpms.service.ReadService;
 import com.gpms.utils.Constant;
